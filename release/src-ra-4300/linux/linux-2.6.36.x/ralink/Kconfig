@@ -309,12 +309,12 @@ config RTDEV_MII
 #source "drivers/net/wireless/rlt_wifi/Kconfig"
 #source "drivers/net/wireless/mt_wifi/Kconfig.mt_wifi"
 
-if FIRST_IF_RT2860
-source "drivers/net/wireless/rt2860v2_ap/Kconfig"
+if SECOND_IF_MT7612E
+source "drivers/net/wireless/rlt_wifi/Kconfig"
 endif
 
-if SECOND_IF_MT7610E
-source "drivers/net/wireless/MT7610_ap/Kconfig"
+if FIRST_IF_MT7628
+source "drivers/net/wireless/mt_wifi_7628/embedded/Kconfig"
 endif
 
 endif # WIFI_DRIVER
