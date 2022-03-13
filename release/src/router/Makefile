@@ -1974,20 +1974,19 @@ iptables-1.4.x-clean:
 upnp: nvram$(BCMEX) shared $(IPTABLES)
 
 miniupnpd/config.h: shared/version.h
-	cd miniupnpd && ./genconfig.sh --vendorcfg --leasefile
+	cd miniupnpd && ./configure --vendorcfg --leasefile --portinuse --iptablespath=$(TOP)/$(IPTABLES)
 
 miniupnpd: $(IPTABLES) miniupnpd/config.h
 	@$(SEP)
 	PKG_CONFIG=false ARCH=$(PLATFORM) \
-	$(MAKE) -C $@ -f Makefile.asus \
+	$(MAKE) -C $@ -f Makefile \
 	    IPTABLESPATH=$(TOP)/$(IPTABLES) \
 	    EXTRACFLAGS="-Os $(EXTRACFLAGS) -idirafter$(KERNEL_HEADER_DIR) -ffunction-sections -fdata-sections" \
 	    LDFLAGS="$(EXTRALDFLAGS) -ffunction-sections -fdata-sections -Wl,--gc-sections -L$(IPTC_LIBDIR)" \
 	    LDLIBS="-Wl,--as-needed -lrt $(IPTC_LIBS)"
 
 miniupnpd-clean:
-	-@$(MAKE) -C miniupnpd -f Makefile.asus clean
-	-@rm miniupnpd/config.h
+	-@$(MAKE) -C miniupnpd -f Makefile clean
 
 miniupnpd_1.4: $(IPTABLES) shared/version.h
 	@$(SEP)
