@@ -102,6 +102,7 @@ static const struct model_s model_list[] = {
 	{ "DSL-AC68U",	MODEL_DSLAC68U	},
 	{ "RT-AC1200G", MODEL_RTAC1200G	},
 	{ "RT-AC1200G+", MODEL_RTAC1200GP},
+	{ "RT-4C",	MODEL_RT4C	},
 #endif	/* !RTCONFIG_RALINK */
 	{ NULL, 0 },
 };
@@ -168,6 +169,9 @@ int get_fwver(char *buildno, char *extendno) {
  * result is cached for safe multiple use */
 int get_model(void)
 {
+#ifdef RT4C
+	return MODEL_RT4C;
+#endif
 	static int model = MODEL_UNKNOWN;
 	char *pid;
 	const struct model_s *p;

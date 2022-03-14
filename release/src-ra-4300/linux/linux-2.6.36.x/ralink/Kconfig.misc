@@ -12,6 +12,10 @@ config  MODEL_RTAC1200
 	bool "RT-AC1200"
 	default n
 
+config  MODEL_RT4C
+	bool "RT-RT4C"
+	default n
+
 config  MODEL_RPAC56
 	bool "RP-AC56"
 	default n

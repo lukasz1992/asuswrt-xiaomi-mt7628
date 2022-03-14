@@ -50,7 +50,7 @@ void init_devs(void)
 {
 #define MKNOD(name,mode,dev)	if(mknod(name,mode,dev)) perror("## mknod " name)
 
-#if defined(LINUX30) && !defined(RTN14U) && !defined(RTAC52U) && !defined(RTAC51U) && !defined(RTN11P) && !defined(RTN300) && !defined(RTN54U) && !defined(RTAC1200HP) && !defined(RTN56UB1) && !defined(RTN56UB2) && !defined(RTAC54U) && !defined(RTAC51UP) && !defined(RTAC53) && !defined(RTAC1200GA1) && !defined(RTAC1200GU) && !defined(RTAC1200) && !defined(RTN11P_B1) && !defined(RPAC87) && !defined(RTAC85U)
+#if defined(LINUX30) && !defined(RTN14U) && !defined(RTAC52U) && !defined(RTAC51U) && !defined(RTN11P) && !defined(RTN300) && !defined(RTN54U) && !defined(RTAC1200HP) && !defined(RTN56UB1) && !defined(RTN56UB2) && !defined(RTAC54U) && !defined(RTAC51UP) && !defined(RTAC53) && !defined(RTAC1200GA1) && !defined(RTAC1200GU) && !defined(RTAC1200) && !defined(RTN11P_B1) && !defined(RPAC87) && !defined(RTAC85U) && !defined(RT4C)
 	/* Below device node are used by proprietary driver.
 	 * Thus, we cannot use GPL-only symbol to create/remove device node dynamically.
 	 */
@@ -63,13 +63,13 @@ void init_devs(void)
 	MKNOD("/dev/nvram", S_IFCHR | 0666, makedev(228, 0));
 #else
 	MKNOD("/dev/video0", S_IFCHR | 0666, makedev(81, 0));
-#if !defined(RTN14U) && !defined(RTAC52U) && !defined(RTAC51U) && !defined(RTN11P) && !defined(RTN300) && !defined(RTN54U) && !defined(RTAC1200HP) && !defined(RTN56UB1) && !defined(RTN56UB2) && !defined(RTAC54U) && !defined(RTAC1200GA1) && !defined(RTAC1200GU)  && !defined(RTAC1200) && !defined(RTN11P_B1) && !defined(RPAC87) && !defined(RTAC85U) 
+#if !defined(RTN14U) && !defined(RTAC52U) && !defined(RTAC51U) && !defined(RTN11P) && !defined(RTN300) && !defined(RTN54U) && !defined(RTAC1200HP) && !defined(RTN56UB1) && !defined(RTN56UB2) && !defined(RTAC54U) && !defined(RTAC1200GA1) && !defined(RTAC1200GU)  && !defined(RTAC1200) && !defined(RTN11P_B1) && !defined(RPAC87) && !defined(RTAC85U) && !defined(RT4C)
 	MKNOD("/dev/rtkswitch", S_IFCHR | 0666, makedev(206, 0));
 #endif
 	MKNOD("/dev/spiS0", S_IFCHR | 0666, makedev(217, 0));
 	MKNOD("/dev/i2cM0", S_IFCHR | 0666, makedev(218, 0));
 #if defined(RTN14U) || defined(RTAC52U) || defined(RTAC51U) || defined(RTN11P) || defined(RTN300) || defined(RTN54U) || defined(RTAC1200HP) || defined(RTN56UB1) || defined(RTN56UB2) || defined(RTAC54U)
-#elif defined(RTAC1200) || defined(RTAC1200GA1) || defined(RTAC1200GU) || defined(RTN11P_B1) || defined(RPAC87) || defined(RTAC51UP) || defined(RTAC53) || defined(RTAC85U)
+#elif defined(RTAC1200) || defined(RTAC1200GA1) || defined(RTAC1200GU) || defined(RTN11P_B1) || defined(RPAC87) || defined(RTAC51UP) || defined(RTAC53) || defined(RTAC85U) || defined(RT4C)
 	MKNOD("/dev/rdm0", S_IFCHR | 0x666, makedev(253, 0));
 #else
 	MKNOD("/dev/rdm0", S_IFCHR | 0666, makedev(254, 0));
@@ -156,6 +156,7 @@ void generate_switch_para(void)
 		case MODEL_RTAC53:
 		case MODEL_RTN11P_B1:
 		case MODEL_RTAC85U:
+		case MODEL_RT4C:
 			nvram_unset("vlan3hwname");
 			if ((wans_cap && wanslan_cap) ||
 			    (wanslan_cap && (!nvram_match("switch_wantag", "none") && !nvram_match("switch_wantag", "")))
@@ -350,6 +351,7 @@ void config_switch()
 	case MODEL_RTAC1200:	/* fall through */
 	case MODEL_RTN11P_B1:	
 	case MODEL_RTAC85U:
+	case MODEL_RT4C:
 		merge_wan_port_into_lan_ports = 1;
 		break;
 	default:
@@ -371,7 +373,7 @@ void config_switch()
 		dbG("software reset\n");
 		eval("rtkswitch", "27");	// software reset
 	}
-#if defined(RTN14U) || defined(RTAC52U) || defined(RTAC51U) || defined(RTN11P) || defined(RTN300) || defined(RTN54U) || defined(RTAC1200HP) || defined(RTN56UB1) || defined(RTAC54U) || defined(RTN56UB2) || defined(RTAC51UP)  || defined(RTAC53)|| defined(RTAC1200GA1) || defined(RTAC1200GU) || defined(RTAC1200) || defined(RTN11P_B1) || defined(RTAC85U) 
+#if defined(RTN14U) || defined(RTAC52U) || defined(RTAC51U) || defined(RTN11P) || defined(RTN300) || defined(RTN54U) || defined(RTAC1200HP) || defined(RTN56UB1) || defined(RTAC54U) || defined(RTN56UB2) || defined(RTAC51UP)  || defined(RTAC53)|| defined(RTAC1200GA1) || defined(RTAC1200GU) || defined(RTAC1200) || defined(RTN11P_B1) || defined(RTAC85U) || defined(RT4C)
 	system("rtkswitch 8 0"); //Barton add
 #endif
 

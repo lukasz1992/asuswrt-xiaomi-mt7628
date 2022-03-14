@@ -397,7 +397,8 @@ enum {
 	MODEL_RTAC58U,
 	MODEL_RT4GAC53U,
 	MODEL_RTAC82U,
-  MODEL_RPAC53
+	MODEL_RPAC53,
+	MODEL_RT4C
 };
 /* NOTE: Do not insert new entries in the middle of this enum,
  * always add them to the end! */

@@ -2205,7 +2205,7 @@ if [ "$(TUNEK)" != "n" ]; then \
 		sed -i "/CONFIG_CPU_MIPSR1/d" $(1); \
 		echo "CONFIG_CPU_MIPSR2=y" >>$(1); \
 	fi; \
-	if [ "$(RTN11P)" = "y" ] || [ "$(RTN300)" = "y" ]; then \
+	if [ "$(RTN11P)" = "y" ] || [ "$(RTN300)" = "y" ] || [ "$(RT4C)" = "y" ]; then \
 		sed -i "/CONFIG_USB/d" $(1); \
 		echo "# CONFIG_USB is not set" >>$(1); \
 		sed -i "/CONFIG_USB_SUPPORT/d" $(1); \
@@ -2230,8 +2230,6 @@ if [ "$(TUNEK)" != "n" ]; then \
 		echo "# CONFIG_VFAT_FS is not set" >>$(1); \
 		sed -i "/CONFIG_REISERFS_FS/d" $(1); \
 		echo "# CONFIG_REISERFS_FS is not set" >>$(1); \
-		sed -i "/CONFIG_JFFS2_FS/d" $(1); \
-		echo "# CONFIG_JFFS2_FS is not set" >>$(1); \
 		sed -i "/CONFIG_FUSE_FS/d" $(1); \
 		echo "# CONFIG_FUSE_FS is not set" >>$(1); \
 		sed -i "/CONFIG_CONFIGFS_FS/d" $(1); \
@@ -2240,8 +2238,12 @@ if [ "$(TUNEK)" != "n" ]; then \
 		echo "# CONFIG_SERIAL_NONSTANDARD is not set" >>$(1); \
 		sed -i "/CONFIG_NETWORK_FILESYSTEMS/d" $(1); \
 		echo "# CONFIG_NETWORK_FILESYSTEMS is not set" >>$(1); \
-		sed -i "/CONFIG_CC_OPTIMIZE_FOR_SIZE/d" $(1); \
-		echo "CONFIG_CC_OPTIMIZE_FOR_SIZE=y" >>$(1); \
+		if [ "$(RT4C)" != "y" ]; then \
+			sed -i "/CONFIG_CC_OPTIMIZE_FOR_SIZE/d" $(1); \
+			echo "CONFIG_CC_OPTIMIZE_FOR_SIZE=y" >>$(1); \
+			sed -i "/CONFIG_JFFS2_FS/d" $(1); \
+			echo "# CONFIG_JFFS2_FS is not set" >>$(1); \
+		fi ; \
 		sed -i "/CONFIG_KALLSYMS/d" $(1); \
 		echo "# CONFIG_KALLSYMS is not set" >>$(1); \
 		sed -i "/CONFIG_RALINK_TIMER/d" $(1); \

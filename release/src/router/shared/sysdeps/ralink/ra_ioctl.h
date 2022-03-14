@@ -16,7 +16,7 @@
 #define RAETH_ASUS_RESET		0x0
 #define RAETH_ASUS_STATS		0x1
 
-#if defined(RTN14U) || defined(RTAC52U) || defined(RTAC51U) || defined(RTN11P) || defined(RTN300) || defined(RTN54U) || defined(RTAC1200HP) || defined(RTN56UB1) || defined(RTN56UB2) || defined(RTAC54U) || defined(RTAC1200GA1) || defined(RTAC1200GU) || defined(RTAC54U) || defined (RTAC1200) || defined (RTN11P_B1) || defined(RPAC87) || defined(RTAC85U)
+#if defined(RTN14U) || defined(RTAC52U) || defined(RTAC51U) || defined(RTN11P) || defined(RTN300) || defined(RTN54U) || defined(RTAC1200HP) || defined(RTN56UB1) || defined(RTN56UB2) || defined(RTAC54U) || defined(RTAC1200GA1) || defined(RTAC1200GU) || defined(RTAC54U) || defined (RTAC1200) || defined (RTN11P_B1) || defined(RPAC87) || defined(RTAC85U) || defined(RT4C)
 
 #define REG_ESW_WT_MAC_MFC              0x10
 #define REG_ESW_WT_MAC_ATA1             0x74
@@ -62,7 +62,7 @@
 
 #if defined(CONFIG_RALINK_RT3352)
 #define REG_ESW_MAX			0x14C
-#elif defined (CONFIG_RALINK_RT5350) || defined(RTAC1200)
+#elif defined (CONFIG_RALINK_RT5350) || defined(RTAC1200) || defined(RT4C)
 #define REG_ESW_MAX                     0x16C
 #elif defined(RTN14U) || defined(RTAC52U) || defined(RTAC51U) || defined(RTN11P) || defined(RTN300) || defined(RTN54U) || defined(RTAC1200HP) || defined(RTN56UB1) || defined(RTN56UB2) || defined(RTAC54U)|| defined(RTAC1200GA1) || defined(RTAC1200GU) || defined(RTAC51UP) || defined(RTAC53) || defined(RTAC85U)
 #define REG_ESW_MAX			0x7FFFF

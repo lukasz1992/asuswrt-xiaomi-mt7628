@@ -3024,6 +3024,30 @@ int init_nvram(void)
 		break;
 #endif	/* RTAC1200 */
 
+#if defined(RT4C)
+	case MODEL_RT4C:
+		nvram_set("boardflags", "0x100"); // although it is not used in ralink driver, set for vlan
+		nvram_set("vlan1hwname", "et0");  // vlan. used to get "%smacaddr" for compare and find parent interface.
+		nvram_set("vlan2hwname", "et0");  // vlan. used to get "%smacaddr" for compare and find parent interface.
+		nvram_set("lan_ifname", "br0");
+		set_basic_ifname_vars("vlan2", "vlan1", "ra0", NULL, NULL, "vlan1", NULL, "vlan3", NULL, 0);
+
+		nvram_set_int("btn_rst_gpio",  38|GPIO_ACTIVE_LOW);
+		nvram_set_int("led_pwr_gpio",  11|GPIO_ACTIVE_LOW);
+		nvram_set_int("led_wan_gpio",  44|GPIO_ACTIVE_LOW);
+
+		nvram_set("ct_max", "300000"); // force
+
+		add_rc_support("mssid");
+		add_rc_support("2.4G noupdate");
+		add_rc_support("rawifi");
+		add_rc_support("pwrctrl");
+		// the following values is model dep. so move it from default.c to here
+		nvram_set("wl0_HT_TxStream", "2");
+		nvram_set("wl0_HT_RxStream", "2");
+		break;
+#endif	/* RT4C */
+
 #if defined(RTAC1200GU)
 	case MODEL_RTAC1200GU:
 		nvram_set("boardflags", "0x100"); // although it is not used in ralink driver, set for vlan
@@ -6659,7 +6683,7 @@ int init_nvram(void)
 		add_rc_support("defpsk");
 #endif
 
-#if defined(RTAC1200)
+#if defined(RTAC1200) || defined(RT4C)
 	add_rc_support("noaidisk nodm noftp");
 #endif
 

@@ -405,8 +405,9 @@ ifneq ($(RTCONFIG_TOR), y)
 	rm -rf $(INSTALLDIR)/www/Advanced_TOR_Content.asp
 endif
 
-ifeq ($(BUILD_NAME),$(filter $(BUILD_NAME), RT-AC1200 RT-AC1200GA1 RT-AC1200GU RT-N600))
-	rm -rf $(INSTALLDIR)/www/Advacned_SwitchCtrl_Content.asp
+ifeq ($(BUILD_NAME),$(filter $(BUILD_NAME), RT-AC1200 RT-AC1200GA1 RT-AC1200GU RT-N600 RT-4C))
+	rm -rf $(INSTALLDIR)/www/Advanced_SwitchCtrl_Content.asp
+	rm -rf $(INSTALLDIR)/www/Advanced_WMode_Content.asp
 endif
 
 ifneq ($(BUILD_NAME),$(filter $(BUILD_NAME), RT-AC3200 RT-AC88U RT-AC3100 RT-AC5300 RT-AC5300R RT-AC87U DSL-AC68U RT-AC56U RT-AC56R RT-AC68U RT-AC68R RT-AC68W RT-AC68RW RT-AC1900P RT-AC67U))

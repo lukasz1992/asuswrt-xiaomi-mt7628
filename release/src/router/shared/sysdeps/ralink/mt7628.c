@@ -89,7 +89,18 @@ enum {
 #endif
 #endif
 
-#ifdef RTCONFIG_WAN_AT_P4
+#if defined(RT4C)
+enum {
+	WAN_PORT=1,
+	LAN1_PORT=4,
+	LAN2_PORT=2,
+	LAN3_PORT=0,
+	LAN4_PORT=3,
+	P5_PORT=5,
+	CPU_PORT=6,
+	P7_PORT=7,
+};
+#elif defined(RTCONFIG_WAN_AT_P4)
 enum {
 	WAN_PORT=4,
 	LAN1_PORT=3,
@@ -1782,7 +1793,6 @@ ralink_gpio_write_bit(int idx, int value)
 		req=RALINK_ATE_GPIO96;
 		idx=value;
 #else
-#error invalid product!!
 #endif		
 	}   
 	else

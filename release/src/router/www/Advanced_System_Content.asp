@@ -191,7 +191,7 @@ function initial(){
 					document.form.btn_ez_radiotoggle[0].checked = true;		
 			}
 	}
-	
+	if (based_modelid == "RT-4C") document.getElementById('btn_ez_radiotoggle_tr').style.display = "none";
 	if(sw_mode != 1){
 		document.getElementById('misc_http_x_tr').style.display ="none";
 		hideport(0);

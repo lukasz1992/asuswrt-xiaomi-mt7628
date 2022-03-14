@@ -1453,7 +1453,7 @@ function remove_url(){
 	}
 
 	/* hide WDS page for RT-AC1200 */
-	if(based_modelid =="RT-AC1200" || based_modelid =="RT-N600"){
+	if(based_modelid =="RT-AC1200" || based_modelid =="RT-N600" || based_modelid == "RT-4C"){
 		remove_menu_item("Advanced_WMode_Content.asp");
 	}	
 

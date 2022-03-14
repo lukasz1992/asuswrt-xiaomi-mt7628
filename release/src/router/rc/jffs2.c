@@ -83,6 +83,7 @@ unsigned int get_root_type(void)
 		case MODEL_RTAC1200GU:
 		case MODEL_RTAC1200:
 		case MODEL_RTN11P_B1:
+		case MODEL_RT4C:
 			return 0x73717368;	/* squashfs */
 
 	}
