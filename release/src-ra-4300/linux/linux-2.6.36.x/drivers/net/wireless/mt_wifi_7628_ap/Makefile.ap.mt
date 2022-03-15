@@ -149,21 +149,28 @@ ifeq ($(CONFIG_MT_LLTD_SUPPORT),y)
     EXTRA_CFLAGS += -DLLTD_SUPPORT
 endif
 
+ifeq ($(CONFIG_SMART_CARRIER_SENSE_SUPPORT),y)
+    EXTRA_CFLAGS += -DSMART_CARRIER_SENSE_SUPPORT
+endif
+
 # FT
-#ifeq ($(CONFIG_RT2860V2_80211R_FT),y)
-#dot11_ft_objs += $(MT_WIFI_DIR)/common/ft.o\
-#                    $(MT_WIFI_DIR)/common/ft_tlv.o\
-#                    $(MT_WIFI_DIR)/common/ft_ioctl.o\
-#                    $(MT_WIFI_DIR)/common/ft_rc.o\
-#                    $(MT_WIFI_DIR)/ap/ap_ftkd.o
-#endif
+ifeq ($(CONFIG_MT_DOT11R_FT_SUPPORT),y)
+EXTRA_CFLAGS += -DDOT11R_FT_SUPPORT
+spec_objs += $(MT_WIFI_DIR)/common/ft.o\
+                    $(MT_WIFI_DIR)/common/ft_tlv.o\
+                    $(MT_WIFI_DIR)/common/ft_iocl.o\
+                    $(MT_WIFI_DIR)/common/ft_rc.o\
+                    $(MT_WIFI_DIR)/ap/ap_ftkd.o
+endif
 
 # RR
-#ifeq ($(CONFIG_RT2860V2_80211K_RR),y)
-#dot11k_rr_objs += $(MT_WIFI_DIR)/common/rrm_tlv.o\
-#                    $(MT_WIFI_DIR)/common/rrm_sanity.o\
-#                    $(MT_WIFI_DIR)/common/rrm.o
-#endif
+ifeq ($(CONFIG_MT_DOT11K_RRM_SUPPORT),y)
+EXTRA_CFLAGS += -DDOT11K_RRM_SUPPORT -DAP_SCAN_SUPPORT -DSCAN_SUPPORT -DAPPLE_11K_IOT
+spec_objs += $(MT_WIFI_DIR)/common/rrm_tlv.o\
+                    $(MT_WIFI_DIR)/common/rrm_sanity.o\
+                    $(MT_WIFI_DIR)/common/rrm.o
+endif
+
 #SNIFFER
 ifeq ($(CONFIG_MT_SNIFFER_SUPPORT),y)
     EXTRA_CFLAGS += -DCONFIG_SNIFFER_SUPPORT
@@ -204,10 +211,7 @@ ifeq ($(CONFIG_MT_BLOCK_NET_IF),y)
 endif
 
 ifeq ($(CONFIG_MT_SINGLE_SKU),y)
-    EXTRA_CFLAGS += -DSINGLE_SKU
-    ifeq ($(CONFIG_RALINK_RT6352),y)
         EXTRA_CFLAGS += -DSINGLE_SKU_V2
-    endif
 endif
 
 ifeq ($(CONFIG_RT2860V2_AP_VIDEO_TURBINE),y)
@@ -226,6 +230,9 @@ ifeq ($(CONFIG_MT_LED_CONTROL_SUPPORT),y)
     func_objs += $(MT_WIFI_DIR)/common/rt_led.o
 endif
 
+ifeq ($(CONFIG_MT_SMART_CARRIER_SENSE_SUPPORT),y)
+    EXTRA_CFLAGS += -DSMART_CARRIER_SENSE_SUPPORT
+endif
 
 ########################################################
 # AP feature related files
@@ -274,7 +281,8 @@ ifeq ($(CONFIG_MT_WDS_SUPPORT),y)
 endif
 
 ifeq ($(CONFIG_MT_APCLI_SUPPORT),y)
-    EXTRA_CFLAGS += -DAPCLI_SUPPORT -DMAT_SUPPORT -DAPCLI_CERT_SUPPORT -DAPCLI_AUTO_CONNECT_SUPPORT -DAPCLI_CONNECTION_TRIAL -DMULTI_APCLI_SUPPORT
+    EXTRA_CFLAGS += -DAPCLI_SUPPORT -DMAT_SUPPORT  -DAPCLI_AUTO_CONNECT_SUPPORT -DAPCLI_AUTO_BW_TMP
+    #EXTRA_CFLAGS += -DAPCLI_CONNECTION_TRIAL -DMULTI_APCLI_SUPPORT -DAPCLI_CERT_SUPPORT
 
     ap_objs += $(MT_WIFI_DIR)/ap/ap_apcli.o\
             $(MT_WIFI_DIR)/ap/ap_apcli_inf.o\
@@ -292,6 +300,16 @@ ifeq ($(CONFIG_MT_APCLI_SUPPORT),y)
 
         ap_objs += $(MT_WIFI_DIR)/ap/ap_repeater.o
     endif
+
+    ifeq ($(CONFIG_MT_APCLI_CERT_SUPPORT),y) 		
+	EXTRA_CFLAGS += -DAPCLI_CERT_SUPPORT
+    endif
+    
+    ifeq ($(CONFIG_MT_APCLI_AUTO_BW_SUPPORT),y) 		
+	EXTRA_CFLAGS += -DAPCLI_AUTO_BW_SUPPORT
+	ap_objs += $(MT_WIFI_DIR)/ap/apcli_autobw.o
+    endif	
+
 endif
 
 ifeq ($(CONFIG_MT_IDS_SUPPORT),y)
@@ -368,6 +386,10 @@ os_objs := $(MT_WIFI_DIR)/os/linux/rt_proc.o\
             $(MT_WIFI_DIR)/os/linux/rt_txrx_hook.o\
             $(MT_WIFI_DIR)/os/linux/rt_main_dev.o
 
+#for MT7628 + MT7637E autobuild symbols conflict
+ifeq ($(CONFIG_MT_TXRX_HOOK),y)
+os_objs += $(SRC_DIR)/os/linux/rt_txrx_hook.o
+endif
 
 ifeq ($(CONFIG_MT_WIFI_WORK_QUEUE_BH),y)
     EXTRA_CFLAGS += -DWORKQUEUE_BH
@@ -390,7 +412,9 @@ EXTRA_CFLAGS += -DNEW_MBSSID_MODE -DENHANCE_NEW_MBSSID_MODE
 EXTRA_CFLAGS += -DENHANCED_STAT_DISPLAY
 EXTRA_CFLAGS += -DFIFO_EXT_SUPPORT
 EXTRA_CFLAGS += -DMCS_LUT_SUPPORT
-EXTRA_CFLAGS += -DUSE_BMC -DTHERMAL_PROTECT_SUPPORT -DCAL_FREE_IC_SUPPORT
+EXTRA_CFLAGS += -DUSE_BMC -DTHERMAL_PROTECT_SUPPORT -DCAL_FREE_IC_SUPPORT -DTRAFFIC_BASED_TXOP
+EXTRA_CFLAGS += -DDATA_QUEUE_RESERVE -DEAPOL_QUEUE_SUPPORT -DDMA_RESET_SUPPORT -DWTBL_RATE_DEBUG -DCONFIG_BA_REORDER_MONITOR
+EXTRA_CFLAGS += -DEDCCA_RB
 
 chip_objs += $(MT_WIFI_DIR)/../chips/mt7628.o\
 		$(MT_WIFI_DIR)/../hw_ctrl/cmm_asic_mt.o\
@@ -441,7 +465,7 @@ endif
 #  CFLAGS
 ##################
 EXTRA_CFLAGS += -DAGGREGATION_SUPPORT -DPIGGYBACK_SUPPORT -DWMM_SUPPORT  -DLINUX \
-               -Wall -Wstrict-prototypes -Wno-trigraphs -Werror
+               -Wall -Wstrict-prototypes -Wno-trigraphs -Werror -Wframe-larger-than=4096
 #-DDBG_DIAGNOSE -DDBG_RX_MCS -DDBG_TX_MCS
 
 EXTRA_CFLAGS += -DCONFIG_AP_SUPPORT -DSCAN_SUPPORT -DAP_SCAN_SUPPORT

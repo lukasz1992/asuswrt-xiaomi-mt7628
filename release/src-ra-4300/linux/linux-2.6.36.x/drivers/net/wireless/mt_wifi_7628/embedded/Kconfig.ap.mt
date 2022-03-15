@@ -135,6 +135,11 @@ config MT_WIFI_SKB_RECYCLE
 #	depends on WIFI_DRIVER
 #	default y
 
+config MT_SMART_CARRIER_SENSE_SUPPORT
+        bool "Smart Carrier Sense"
+        depends on WIFI_DRIVER
+        default y
+
 config MT_LED_CONTROL_SUPPORT
 	bool "LED Support"
 	depends on WIFI_DRIVER
@@ -149,7 +154,12 @@ config MT_MEMORY_OPTIMIZATION
 	bool "Memory Optimization"
 	depends on WIFI_DRIVER
 	default n
-
+	
+config MT_SINGLE_SKU
+	bool "Single SKU Support"
+	depends on WIFI_DRIVER
+	default n
+	
 config MT_UAPSD
 	bool "UAPSD support"
 	depends on WIFI_DRIVER

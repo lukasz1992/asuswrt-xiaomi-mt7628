@@ -29,6 +29,16 @@ config MT_APCLI_SUPPORT
 	bool "AP-Client Support"
 	depends on MT_AP_SUPPORT
 
+config MT_APCLI_AUTO_BW_SUPPORT
+	bool "AP-Client Auto Bandwidth Support"
+	depends on MT_AP_SUPPORT
+        depends on MT_APCLI_SUPPORT
+
+config MT_APCLI_CERT_SUPPORT
+	bool "AP-Client TGN Cert Support"
+	depends on MT_AP_SUPPORT
+        depends on MT_APCLI_SUPPORT
+        
 config MT_MAC_REPEATER_SUPPORT
 	bool "MAC Repeater Support"
 	depends on MT_AP_SUPPORT
@@ -36,14 +46,16 @@ config MT_MAC_REPEATER_SUPPORT
 	depends on RALINK_RT6352 || RALINK_MT7620 || RALINK_MT7603E || MT_AP_SUPPORT
 	default n
 
-#config DOT11R_FT_SUPPORT
-#	bool "802.11r Fast BSS Transition"
-#	depends on MT_AP_SUPPORT
+config MT_DOT11R_FT_SUPPORT
+	bool "802.11r Fast BSS Transition"
+	depends on MT_AP_SUPPORT
+	default y
 
-#config DOT11K_RRM_SUPPORT
-#	bool "802.11k Radio Resource Management"
-#	depends on MT_AP_SUPPORT
-
+config MT_DOT11K_RRM_SUPPORT
+	bool "802.11k Radio Resource Management"
+	depends on MT_AP_SUPPORT
+	default y
+	
 #config MT_SNIFFER_SUPPORT
 #	bool "SNIFFER"
 #	depends on MT_AP_SUPPORT
