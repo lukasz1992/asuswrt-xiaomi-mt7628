@@ -1711,7 +1711,7 @@ static pid_t run_shell(int timeout, int nowait)
 #ifdef CONFIG_BCMWL5
 	if (!ATE_BRCM_FACTORY_MODE())
 #else
-	if (!IS_ATE_FACTORY_MODE())
+//	if (!IS_ATE_FACTORY_MODE())
 #endif
 	{
 		if (!check_if_file_exist("/etc/shadow"))
@@ -1793,7 +1793,7 @@ static void shutdn(int rb)
 	sync();
 
 	// TODO LED Status for LED
-	setAllLedOff();
+	//setAllLedOff();
 
 	reboot(rb ? RB_AUTOBOOT : RB_HALT_SYSTEM);
 
@@ -7528,7 +7528,7 @@ static void sysinit(void)
 
 #if !defined(CONFIG_BCMWL5)	//Broadcom set this in check_wl_territory_code()
 	void handle_location_code_for_wl(void);
-	handle_location_code_for_wl();
+	//handle_location_code_for_wl();
 #endif	/* CONFIG_BCMWL5 */
 
 	init_gpio();   // for system dependent part
@@ -7788,7 +7788,7 @@ int init_main(int argc, char *argv[])
 			dbG("Resume RTK watchdog\n");
 			start_rtl_watchdog();
 #endif
-			if (nvram_match("Ate_power_on_off_enable", "1")) {
+			if (0 /*nvram_match("Ate_power_on_off_enable", "1")*/) {
 				rc_check = nvram_get_int("Ate_rc_check");
 				boot_check = nvram_get_int("Ate_boot_check");
 				boot_fail = nvram_get_int("Ate_boot_fail");
@@ -7929,7 +7929,7 @@ dbg("boot/continue fail= %d/%d\n", nvram_get_int("Ate_boot_fail"),nvram_get_int(
 			}
 #endif
 #ifdef RTCONFIG_RALINK
-			if(nvram_match("Ate_wan_to_lan", "1"))
+			if(0 /*nvram_match("Ate_wan_to_lan", "1")*/)
 			{
 				printf("\n\n## ATE mode:set WAN to LAN... ##\n\n");
 				set_wantolan();
@@ -7958,9 +7958,9 @@ dbg("boot/continue fail= %d/%d\n", nvram_get_int("Ate_boot_fail"),nvram_get_int(
 			}
 #endif
 
-			if (nvram_match("Ate_power_on_off_enable", "3")|| //Show alert light
+			if (0 /*nvram_match("Ate_power_on_off_enable", "3")|| //Show alert light
 				nvram_match("Ate_power_on_off_enable", "4")||
-				nvram_match("Ate_power_on_off_enable", "5")  ) {
+				nvram_match("Ate_power_on_off_enable", "5")*/  ) {
 				start_telnetd();
 				while(1) {
 #ifdef RTCONFIG_REALTEK
@@ -7986,8 +7986,8 @@ dbg("boot/continue fail= %d/%d\n", nvram_get_int("Ate_boot_fail"),nvram_get_int(
 #endif
 
 			//For 66U normal boot & check device
-			if (((get_model()==MODEL_RTN66U) || (get_model()==MODEL_RTAC66U))
-			&& nvram_match("Ate_power_on_off_enable", "0")) {
+			if (0 /*((get_model()==MODEL_RTN66U) || (get_model()==MODEL_RTAC66U))
+			&& nvram_match("Ate_power_on_off_enable", "0")*/) {
 			    ate_dev_status();
 			    if (nvram_get_int("dev_fail_reboot")!=0) {
 				if (strchr(nvram_get("Ate_dev_status"), 'X')) {
@@ -8014,7 +8014,7 @@ dbg("boot/continue fail= %d/%d\n", nvram_get_int("Ate_boot_fail"),nvram_get_int(
 			    }
 			}
 
-			if (nvram_match("Ate_power_on_off_enable", "1")) {
+			if (0 /*nvram_match("Ate_power_on_off_enable", "1")*/) {
 				dev_check = nvram_get_int("Ate_dev_check");
 				dev_fail = nvram_get_int("Ate_dev_fail");
 				ate_dev_status();
@@ -8110,7 +8110,7 @@ dbg("boot/continue fail= %d/%d\n", nvram_get_int("Ate_boot_fail"),nvram_get_int(
 				}
 			}
 			else {
-				ate_run_arpstrom();
+				//ate_run_arpstrom();
 			}
 
 /*#ifdef RTCONFIG_USB_MODEM

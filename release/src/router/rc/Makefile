@@ -170,7 +170,7 @@ LDFLAGS += $(EXTRA_LDFLAGS)
 
 OBJS := rc.o init.o interface.o lan.o wireless.o wan.o pppd.o auth.o services.o #mtd.o
 OBJS += firewall.o ppp.o services.o common.o
-OBJS += watchdog.o ntp.o btnsetup.o qos.o udhcpc.o ate.o
+OBJS += watchdog.o ntp.o btnsetup.o qos.o udhcpc.o
 OBJS += format.o
 ifeq ($(RTAC1200G),y)
 OBJS += mtd_sflash.o
@@ -188,7 +188,7 @@ endif
 ifeq ($(RTCONFIG_REALTEK),y)
 OBJS += init-realtek.o wps-realtek.o realtek.o rtk_wifi_drvmib.o ate-realtek.o
 else ifeq ($(RTCONFIG_RALINK),y)
-OBJS += init-ralink.o wps-ralink.o ralink.o ate-ralink.o
+OBJS += init-ralink.o wps-ralink.o ralink.o
 ifeq ($(RTCONFIG_DSL),y)
 OBJS += init-ralink-dsl.o 
 endif

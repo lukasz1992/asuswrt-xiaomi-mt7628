@@ -57,7 +57,7 @@ endif
 OBJS = httpd.o cgi.o ej.o 
 OBJS += web.o common.o nvram_f.o 
 OBJS += aspbw.o initial_web_hook.o
-OBJS += apps.o
+OBJS += apps.o tcode.o
 
 ifeq ($(CONFIG_REALTEK),y)
 OBJS += web-realtek.o

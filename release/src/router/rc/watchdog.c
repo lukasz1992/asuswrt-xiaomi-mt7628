@@ -5873,7 +5873,7 @@ void watchdog(int sig)
 #ifdef CONFIG_BCMWL5
 	if (factory_debug())
 #else
-	if (IS_ATE_FACTORY_MODE())
+	if (0 /*IS_ATE_FACTORY_MODE()*/)
 #endif
 		return;
 

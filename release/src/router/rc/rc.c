@@ -835,7 +835,7 @@ int main(int argc, char **argv)
 #endif
 	else if(!strcmp(base, "ATE")) {
 		if( argc == 2 || argc == 3 || argc == 4) {
-			asus_ate_command(argv[1], argv[2], argv[3]);
+			//asus_ate_command(argv[1], argv[2], argv[3]);
 		}
 		else
 			printf("ATE_ERROR\n");
@@ -913,7 +913,7 @@ int main(int argc, char **argv)
 
 #if defined(CONFIG_BCMWL5) || defined(RTCONFIG_RALINK) || defined(RTCONFIG_QCA) || defined(RTCONFIG_REALTEK)
 	else if(!strcmp(base, "set_factory_mode")) {
-		set_factory_mode();
+		//set_factory_mode();
 		return 0;
 	}
 #endif
@@ -1172,7 +1172,8 @@ int main(int argc, char **argv)
 		return 0;
 	}
 #endif
-#if defined(RTCONFIG_RALINK) || defined(RTCONFIG_QCA)
+/*
+#if (defined(RTCONFIG_RALINK) || defined(RTCONFIG_QCA)
 	else if (!strcmp(base, "dump_powertable")) {
 		dump_powertable();
 		return 0;
@@ -1182,6 +1183,7 @@ int main(int argc, char **argv)
 		return 0;
 	}	
 #endif
+*/
 	printf("Unknown applet: %s\n", base);
 	return 0;
 }
