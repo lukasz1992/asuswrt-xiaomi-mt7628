@@ -817,6 +817,7 @@ static inline ULONG GET_BIT(ULONG pwr_of_2)
 do{	\
 	ULONG __gLevel = (Level) & 0xff;\
 	ULONG __fLevel = ((Level) & 0xffffff00);\
+	if (((Level) & 0xff) <= DBG_LVL_WARN)	\
 	if (__gLevel <= DebugLevel) {			\
 		if ((RTDebugFunc == 0) || \
 		((RTDebugFunc != 0) && (((__fLevel & RTDebugFunc) != 0) || (__gLevel <= DBG_LVL_ERROR))))\

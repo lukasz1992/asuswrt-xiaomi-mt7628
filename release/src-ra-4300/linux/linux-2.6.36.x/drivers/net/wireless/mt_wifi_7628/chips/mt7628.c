@@ -15,7 +15,6 @@
 */
 
 #include "rt_config.h"
-#include "mcu/mt7628_firmware.h"
 #include "mcu/mt7628_e2_firmware.h"
 #include "eeprom/mt7628_e2p.h"
 #ifdef LINUX	
@@ -1035,9 +1034,9 @@ static const RTMP_CHIP_CAP MT7628_ChipCap = {
 	.cmd_padding_len = 0,
 #endif
 
-	.fw_header_image = MT7628_FirmwareImage,
-	.fw_bin_file_name = "mtk/MT7628.bin",
-	.fw_len = sizeof(MT7628_FirmwareImage),
+	.fw_header_image = MT7628_e2_FirmwareImage,
+	.fw_bin_file_name = "mtk/MT7628_e2.bin",
+	.fw_len = sizeof(MT7628_e2_FirmwareImage),
 #ifdef CARRIER_DETECTION_SUPPORT
 	.carrier_func = TONE_RADAR_V2,
 #endif
@@ -1119,7 +1118,7 @@ VOID mt7628_init(RTMP_ADAPTER *pAd)
 							pAd->HWVersion,
 							pAd->ChipID));
 
-	if (((pAd->HWVersion & 0x0000ffff) == 0x8A00) && IS_MT7628(pAd))
+/*	if (((pAd->HWVersion & 0x0000ffff) == 0x8A00) && IS_MT7628(pAd))
 	{
 
 		pChipCap->fw_header_image = MT7628_FirmwareImage;
@@ -1134,7 +1133,7 @@ VOID mt7628_init(RTMP_ADAPTER *pAd)
 		pChipCap->fw_len = sizeof(MT7628_e2_FirmwareImage);
 		MTWF_LOG(DBG_CAT_ALL, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("e2.bin %s(%d)::(2), pChipCap->fw_len(%d)\n", __FUNCTION__, __LINE__, pChipCap->fw_len));
 	}
-	else
+	else*/
 	{
 		pChipCap->fw_header_image = MT7628_e2_FirmwareImage;
 		pChipCap->fw_bin_file_name = "mtk/WIFI_RAM_CODE_MT7628_e2.bin";

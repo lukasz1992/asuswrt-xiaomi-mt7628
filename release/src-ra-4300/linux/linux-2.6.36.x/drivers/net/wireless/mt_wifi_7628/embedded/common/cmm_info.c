@@ -3032,6 +3032,20 @@ RTMP_STRING *GetEncryptType(CHAR enc)
     	return "UNKNOW";
 }
 
+static inline RTMP_STRING *GetEncryptType2(CHAR enc)
+{
+    if(enc == Ndis802_11WEPDisabled)
+        return "NONE";
+    if(enc == Ndis802_11WEPEnabled)
+        return "WEP";
+    if(enc == Ndis802_11TKIPEnable)
+        return "TKIP";
+    if(enc == Ndis802_11AESEnable || enc == Ndis802_11TKIPAESMix)
+        return "AES";
+    else
+        return "Unknown";
+}
+
 RTMP_STRING *GetAuthMode(CHAR auth)
 {
     if(auth == Ndis802_11AuthModeOpen)
@@ -3073,6 +3087,30 @@ RTMP_STRING *GetAuthMode(CHAR auth)
     	return "UNKNOW";
 }
 
+static inline RTMP_STRING *GetAuthMode2(CHAR auth)
+{
+    if(auth == Ndis802_11AuthModeOpen)
+        return "Open System";
+    if(auth == Ndis802_11AuthModeShared)
+        return "Shared Key";
+    if(auth == Ndis802_11AuthModeWPA || auth == Ndis802_11AuthModeWPA1WPA2)
+        return "WPA-Enterprise";
+    if(auth == Ndis802_11AuthModeWPAPSK)
+        return "WPA-Personal";
+    if(auth == Ndis802_11AuthModeWPA2)
+        return "WPA2-Enterprise";
+    if(auth == Ndis802_11AuthModeWPA2PSK || auth == Ndis802_11AuthModeWPA1PSKWPA2PSK)
+        return "WPA2-Personal";
+#ifdef DOT11_SAE_SUPPORT
+	if (auth == Ndis802_11AuthModeWPA3PSK || auth == Ndis802_11AuthModeWPA2PSKWPA3PSK)
+		return "WPA3-Personal";
+#endif
+#ifdef CONFIG_OWE_SUPPORT
+	if (auth == Ndis802_11AuthModeOWE)
+		return "Open System";
+#endif
+        return "Unknown";
+}
 
 /*
     ==========================================================================
@@ -3092,7 +3130,7 @@ RTMP_STRING *GetAuthMode(CHAR auth)
         		3.) UI needs to prepare at least 4096bytes to get the results
     ==========================================================================
 */
-#define	LINE_LEN	(4+33+20+23+9+7+7+3)	/* Channel+SSID+Bssid+Security+Signal+WiressMode+ExtCh+NetworkType*/
+#define	LINE_LEN	(4+33+18+9+16+9+8)	/* Channel+SSID+Bssid+Enc+Auth+Signal+WiressMode*/
 #ifdef AIRPLAY_SUPPORT
 #define IS_UNICODE_SSID_LEN  (4)
 #endif /* AIRPLAY_SUPPORT */
@@ -3152,7 +3190,7 @@ VOID RTMPCommSiteSurveyData(
 #endif /* AIRPLAY_SUPPORT */
 
 		/*BSSID*/
-		sprintf(msg+strlen(msg),"%02x:%02x:%02x:%02x:%02x:%02x   ",
+		sprintf(msg+strlen(msg),"%02x:%02x:%02x:%02x:%02x:%02x ",
 			pBss->Bssid[0],
 			pBss->Bssid[1],
 			pBss->Bssid[2],
@@ -3251,7 +3289,7 @@ VOID RTMPCommSiteSurveyData(
 			sprintf(SecurityStr, "%s/%s", GetAuthMode((CHAR)ap_auth_mode), GetEncryptType((CHAR)ap_cipher));
 	}
 
-	sprintf(msg+strlen(msg), "%-23s", SecurityStr);
+	sprintf(msg+strlen(msg), "%-9s%-16s", GetEncryptType2((CHAR)ap_cipher), GetAuthMode2((CHAR)ap_auth_mode));
 
 		/* Rssi*/
 		Rssi = (INT)pBss->Rssi;
@@ -3281,6 +3319,7 @@ VOID RTMPCommSiteSurveyData(
 		else
 			sprintf(msg+strlen(msg),"%-7s", "unknow");
 
+#if 0
 		/* Ext Channel*/
 		if (pBss->AddHtInfoLen > 0)
 		{
@@ -3301,6 +3340,7 @@ VOID RTMPCommSiteSurveyData(
 			sprintf(msg+strlen(msg),"%-3s", " Ad");
 		else
 			sprintf(msg+strlen(msg),"%-3s", " In");
+#endif
 
         sprintf(msg+strlen(msg),"\n");
 
@@ -3380,10 +3420,11 @@ VOID RTMPIoctlGetSiteSurvey(
 	sprintf(msg+strlen(msg),"%-4s%-33s%-4s%-20s%-23s%-9s%-7s%-7s%-3s\n",
 	    "Ch", "SSID", "UN", "BSSID", "Security", "Siganl(%)", "W-Mode", " ExtCH"," NT");
 #else
-	sprintf(msg+strlen(msg),"%-4s%-33s%-20s%-23s%-9s%-7s%-7s%-3s\n",
-	    "Ch", "SSID", "BSSID", "Security", "Siganl(%)", "W-Mode", " ExtCH"," NT");
+	sprintf(msg+strlen(msg),"%-4s%-33s%-18s%-9s%-16s%-9s%-8s\n",
+	    "Ch", "SSID", "BSSID", "Enc", "Auth", "Siganl(%)", "W-Mode");
 #endif /* AIRPLAY_SUPPORT */
 
+#if 0
 #ifdef WSC_INCLUDED
 	sprintf(msg+strlen(msg)-1,"%-4s%-5s\n", " WPS", " DPID");
 #endif /* WSC_INCLUDED */
@@ -3399,6 +3440,7 @@ VOID RTMPIoctlGetSiteSurvey(
 	sprintf(msg+strlen(msg)-1,"%-5s%-9s%-10s\n", " MDId", " FToverDS", " RsrReqCap");
 #endif /* DOT11R_FT_SUPPORT */
 #endif /* CONFIG_STA_SUPPORT */
+#endif
 
 	WaitCnt = 0;
 #ifdef CONFIG_STA_SUPPORT
@@ -3431,6 +3473,7 @@ VOID RTMPIoctlGetSiteSurvey(
 #endif /* AIRPLAY_SUPPORT */
 
 		RTMPCommSiteSurveyData(msg, pBss, TotalLen);
+		continue;
 
 #ifdef WSC_INCLUDED
         /*WPS*/
