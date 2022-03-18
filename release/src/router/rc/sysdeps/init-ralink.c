@@ -1412,8 +1412,8 @@ void init_syspara(void)
 	{
 		_dprintf("Read REG2G_EEPROM_ADDR fail or invalid value\n");
 		nvram_set("wl_country_code", "");
-		nvram_set("wl0_country_code", "DB");
-		nvram_set("wl_reg_2g", "2G_CH14");
+		nvram_set("wl0_country_code", "GB");
+		nvram_set("wl_reg_2g", "2G_CH13");
 	}
 	else
 	{

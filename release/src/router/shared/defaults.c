@@ -121,7 +121,7 @@ struct nvram_tuple router_defaults[] = {
 	{ "wl_phytypes", "", 0 },		/* List of supported wireless bands (e.g. "ga") */
 	{ "wl_radioids", "", 0 },		/* List of radio IDs */
 #endif
-	{ "wl_ssid", "ASUS", 0 },		/* Service set ID (network name) */
+	{ "wl_ssid", "Xiaomi", 0 },		/* Service set ID (network name) */
 #ifdef RTCONFIG_CONCURRENTREPEATER
 	{ "wl0_ssid", DEF_SSID_2G, 0 },
 	{ "wl1_ssid", DEF_SSID_5G, 0 },
@@ -287,7 +287,7 @@ struct nvram_tuple router_defaults[] = {
 #endif
 	{ "wl_mrate_x", "0", 0 },		/* Mcast Auto rate */
 #ifndef RTCONFIG_WIFILOGO
-	{ "wl_frameburst", "on", 0 },		/* BRCM Frambursting mode (off|on) */
+	{ "wl_frameburst", "off", 0 },		/* BRCM Frambursting mode (off|on) */
 #else
 	{ "wl_frameburst", "off", 0 },
 #endif
@@ -322,7 +322,7 @@ struct nvram_tuple router_defaults[] = {
 #else
 	{ "wl_gmode", XSTR(GMODE_AUTO), 0 },	/* 54g mode */
 #endif
-	{ "wl_gmode_protection", "auto", 0 },	/* 802.11g RTS/CTS protection (off|auto) */
+	{ "wl_gmode_protection", "off", 0 },	/* 802.11g RTS/CTS protection (off|auto) */
 
 #ifdef RTCONFIG_OPTIMIZE_XBOX
 	{ "wl_optimizexbox", "0", 0 },		/* Optimize WiFi packet for Xbox */
@@ -531,7 +531,7 @@ struct nvram_tuple router_defaults[] = {
 	{ "wl_nas_dbg", "0", 0 },		/* Enable/Disable NAS Debugging messages */
 #endif
 	// ASUS used only?
-	{ "wl_nmode_x", "0", 0 },	/* 0/1/2, auto/nonly,bgmixed */
+	{ "wl_nmode_x", "1", 0 },	/* 0/1/2, auto/nonly,bgmixed */
 #if defined(RTCONFIG_BCMWL6) || defined(RTCONFIG_REALTEK)
 	{ "wl_bw", "0", 0 },		/* 0/1/2/3 auto/20/40/80MHz */
 #ifdef RTCONFIG_QTN
@@ -743,8 +743,8 @@ struct nvram_tuple router_defaults[] = {
 
 // WPS
 //	#if defined (W7_LOGO) || defined (WIFI_LOGO)
-	{ "wps_enable", "1" },
-	{ "wps_enable_x", "1" },
+	{ "wps_enable", "0" },
+	{ "wps_enable_x", "0" },
 //	#else
 //	{ "wps_enable_x", "0" },					// win7 logo
 //	#endif
@@ -1232,7 +1232,7 @@ struct nvram_tuple router_defaults[] = {
 
 	/* Misc WAN parameters */
 	{ "wan_desc", "" },		/* WAN connection description */
-	{ "wan_upnp_enable", "1" }, 	// upnp igd
+	{ "wan_upnp_enable", "0" }, 	// upnp igd
 	{ "wan_pppoe_relay", "0" },
 
 	// VPN+DHCP, a sperated nvram to control this function
@@ -2435,7 +2435,7 @@ struct nvram_tuple router_defaults[] = {
 
 	{ "web_redirect", 	"1"		},	// Only NOLINK is redirected in default, it is overwrited in init_nvram
 	{ "disiosdet",		"1"		},
-	{ "nat_redirect_enable",	"1" },
+	{ "nat_redirect_enable",	"0" },
 
 #ifdef RTCONFIG_FANCTRL
 	{ "fanctrl_dutycycle",		"0" },
