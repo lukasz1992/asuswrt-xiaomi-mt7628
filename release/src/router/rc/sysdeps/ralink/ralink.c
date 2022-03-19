@@ -1778,6 +1778,13 @@ int gen_ralink_config(int band, int is_iNIC)
 		fprintf(fp, "RekeyInterval=%d\n", 0);
 	}
 
+	str = nvram_safe_get(strcat_r(prefix, "mfp", tmp));
+	if (str && strlen(str)) {
+		fprintf(fp, "PMFMFPC=%d\n", str[0] > '0');
+		fprintf(fp, "PMFMFPR=%d\n", str[0] == '2');
+		fprintf(fp, "PMFSHA256=%d\n", str[0] == '2');
+	}
+
 	//PMKCachePeriod (in minutes)
 	str = nvram_safe_get(strcat_r(prefix, "pmk_cache", tmp));
 	if (str && strlen(str))

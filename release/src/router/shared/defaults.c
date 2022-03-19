@@ -446,10 +446,8 @@ struct nvram_tuple router_defaults[] = {
 	{ "wl_pmk_cache", "60", 0 },		/* Network Re-auth/PMK caching duration in minutes */
 #endif
 	{ "wl_akm", "", 0 },			/* WPA akm list */
-#ifdef RTCONFIG_BCMWL6
-#ifdef MFP
 	{ "wl_mfp", "0", 0 },			/* Protected Management Frame */
-#endif
+#ifdef RTCONFIG_BCMWL6
 	{ "wl_psr_mrpt", "0", 0 },		/* Default to one level repeating mode */
 #endif
 #ifdef RTCONFIG_WPS
