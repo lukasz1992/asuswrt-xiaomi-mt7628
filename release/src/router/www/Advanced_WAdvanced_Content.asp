@@ -400,7 +400,7 @@ function initial(){
 		add_option(document.form.wl_mrate_x, mcast_rates[i][0], mcast_rates[i][1], (mcast_rate == mcast_rates[i][1]) ? 1 : 0);
 	}
 
-	if(repeater_support || psta_support){		//with RE mode
+	if(1){		//with RE mode
 		document.getElementById("DLSCapable").style.display = "none";	
 	}	
 

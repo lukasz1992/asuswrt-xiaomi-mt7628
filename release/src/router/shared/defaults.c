@@ -659,7 +659,7 @@ struct nvram_tuple router_defaults[] = {
 #ifdef RTCONFIG_RALINK
 	{ "wl_PktAggregate", "1" },	// UI configurable
  	{ "wl_HT_OpMode", "0" }, 	// UI configurable
-#if defined(RTAC85U) || defined(RTAC65U)
+#if 1
 	{ "wl_DLSCapable", "1" },	// UI configurable
 #else
 	{ "wl_DLSCapable", "0" },	// UI configurable
@@ -670,7 +670,7 @@ struct nvram_tuple router_defaults[] = {
 	{ "wl_HT_RDG", "1" },
 	{ "wl_HT_LinkAdapt", "0" },
 	{ "wl_HT_MpduDensity", "5" },
-#if defined(RTAC85U) || defined(RPAC87)
+#if 1
 	{ "wl_HT_AMSDU", "1" },
 #else
 	{ "wl_HT_AMSDU", "0" },

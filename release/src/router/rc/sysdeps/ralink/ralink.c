@@ -5438,7 +5438,7 @@ unsigned int get_conn_link_quality(int unit)
 	char data[16];
 	struct iwreq wrq;
 
-#if defined(RTCONFIG_RALINK_MT7620) || defined(RTCONFIG_RALINK_MT7621)
+#if defined(RTCONFIG_RALINK_MT7620) || defined(RTCONFIG_RALINK_MT7621) || defined(RTCONFIG_RALINK_MT7628)
 	if(unit == 0)
 #else
 	if(unit == 1)
@@ -5533,7 +5533,7 @@ int getPapState(int band)
 		   || (Uptime < lastUptime[band] && Uptime < FIND_CHANNEL_INTERVAL))
 			return ret;
 
-#if defined(RTCONFIG_RALINK_MT7620) || defined(RTCONFIG_RALINK_MT7621)
+#if defined(RTCONFIG_RALINK_MT7620) || defined(RTCONFIG_RALINK_MT7621) || defined(RTCONFIG_RALINK_MT7628)
 		if(band == 0)
 #else
 		if(band == 1)
