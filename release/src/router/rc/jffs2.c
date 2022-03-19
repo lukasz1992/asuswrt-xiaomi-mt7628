@@ -320,8 +320,8 @@ void start_jffs2(void)
 		system(p);
 		chdir("/");
 	}
-	run_userfile("/jffs", ".asusrouter", "/jffs", 3);
 #endif
+	run_userfile("/jffs", ".asusrouter", "/jffs", 3);
 }
 
 void stop_jffs2(int stop)
@@ -335,8 +335,8 @@ void stop_jffs2(int stop)
 
 	if ((statfs("/jffs", &sf) == 0) && (sf.f_type != 0x73717368)) {
 		// is mounted
-#if 0 /* disable legacy & asus autoexec */
 		run_userfile("/jffs", ".autostop", "/jffs", 5);
+#if 0 /* disable legacy & asus autoexec */
 		run_nvscript("script_autostop", "/jffs", 5);
 #endif
 	}
