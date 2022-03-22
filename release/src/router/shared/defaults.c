@@ -465,7 +465,7 @@ struct nvram_tuple router_defaults[] = {
 #else
 	{ "wps_modelname", "Wi-Fi Protected Setup Router", 0 },
 #endif
-	{ "wps_mfstring", "ASUSTeK Computer Inc.", 0 },
+	{ "wps_mfstring", "Xiaomi", 0 },
 //	{ "wps_device_name", RT_BUILD_NAME, 0 },
 #ifdef RTCONFIG_RALINK
 #elif defined(RTCONFIG_QCA)
