@@ -547,8 +547,9 @@ wl_status(int eid, webs_t wp, int argc, char_t **argv, int unit)
 	else
 		ret+=websWrite(wp, "OP Mode		: AP\n");
 
+/*
 #if defined(RTAC52U) || defined(RTAC51U) || defined(RTN54U)  || defined(RTAC1200HP) || defined(RTAC54U) || defined(RTAC1200) || defined(RTAC1200GA1) || defined(RTAC1200GU) || defined(RTAC85U) || defined(MTK_REP)
-	if (unit == 1)
+	if (unit == 1)*/
 	{
 		char *p = tmp;
 		if(phy_mode & WMODE_A)
@@ -566,7 +567,7 @@ wl_status(int eid, webs_t wp, int argc, char_t **argv, int unit)
 		if(p != tmp)
 			ret+=websWrite(wp, "Phy Mode	: 11%s\n", tmp+1); // skip first '/'
 	}
-	else
+/*	else
 #endif
 	if (phy_mode==PHY_11BG_MIXED)
 		ret+=websWrite(wp, "Phy Mode	: 11b/g\n");
@@ -589,7 +590,7 @@ wl_status(int eid, webs_t wp, int argc, char_t **argv, int unit)
 	else if (phy_mode==PHY_11BGN_MIXED)
 		ret+=websWrite(wp, "Phy Mode	: 11b/g/n\n");
 	else if (phy_mode==PHY_11AGN_MIXED)
-		ret+=websWrite(wp, "Phy Mode	: 11a/g/n\n");
+		ret+=websWrite(wp, "Phy Mode	: 11a/g/n\n");*/
 
 	ret+=websWrite(wp, "Channel		: %d\n", channel);
 
