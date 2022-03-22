@@ -1656,6 +1656,14 @@ int gen_ralink_config(int band, int is_iNIC)
 			{
 				sprintf(tmpstr, "%s%s", tmpstr, "WPAPSKWPA2PSK");
 			}
+			else if (!strcmp(str, "psk2psk3"))
+			{
+				sprintf(tmpstr, "%s%s", tmpstr, "WPA2PSKWPA3PSK");
+			}
+			else if (!strcmp(str, "psk3"))
+			{
+				sprintf(tmpstr, "%s%s", tmpstr, "WPA3PSK");
+			}
 			else if (!strcmp(str, "wpa"))
 			{
 				sprintf(tmpstr, "%s%s", tmpstr, "WPA");
@@ -2917,10 +2925,12 @@ int gen_ralink_config(int band, int is_iNIC)
 				fprintf(fp, "ApCliAuthMode=%s\n", "WEPAUTO");
 				fprintf(fp, "ApCliEncrypType=%s\n", "WEP");
 			}
-			else if (!strcmp(str, "psk") || !strcmp(str, "psk2"))
+			else if (!strcmp(str, "psk") || !strcmp(str, "psk2") || !strcmp(str, "psk3"))
 			{
 				if (!strcmp(str, "psk"))
 					fprintf(fp, "ApCliAuthMode=%s\n", "WPAPSK");
+				else if (!strcmp(str, "psk3"))
+					fprintf(fp, "ApCliAuthMode=%s\n", "WPA3PSK");
 				else
 					fprintf(fp, "ApCliAuthMode=%s\n", "WPA2PSK");
 
@@ -3044,10 +3054,12 @@ int gen_ralink_config(int band, int is_iNIC)
 				fprintf(fp, "ApCliAuthMode=%s\n", "WEPAUTO");
 				fprintf(fp, "ApCliEncrypType=%s\n", "WEP");
 			}
-			else if (!strcmp(str, "psk") || !strcmp(str, "psk2"))
+			else if (!strcmp(str, "psk") || !strcmp(str, "psk2") || !strcmp(str, "psk3"))
 			{
 				if (!strcmp(str, "psk"))
 					fprintf(fp, "ApCliAuthMode=%s\n", "WPAPSK");
+				else if (!strcmp(str, "psk3"))
+					fprintf(fp, "ApCliAuthMode=%s\n", "WPA3PSK");
 				else
 					fprintf(fp, "ApCliAuthMode=%s\n", "WPA2PSK");
 
@@ -3846,6 +3858,8 @@ getSiteSurvey(int band,char* ofile)
 						fprintf(fp, "\"%s\",","WPA-Personal");
 					else if(strstr(ssap->SiteSurvey[i].authmode,"WPA2-Personal"))
 						fprintf(fp, "\"%s\",","WPA2-Personal");
+					else if(strstr(ssap->SiteSurvey[i].authmode,"WPA3-Personal"))
+						fprintf(fp, "\"%s\",","WPA3-Personal");
 					else if(strstr(ssap->SiteSurvey[i].authmode,"Open System")) {
 						if(strstr(ssap->SiteSurvey[i].encryption, "WEP"))
 							fprintf(fp, "\"%s\",","Unknown");
@@ -5075,13 +5089,15 @@ wsc_user_commit(void)
 
 			doSystem("iwpriv %s set IEEE8021X=%d", wif, 0);
 		}
-		else if (!strcmp(auth_mode, "psk") || !strcmp(auth_mode, "psk2") || !strcmp(auth_mode, "pskpsk2")) {
+		else if (!strcmp(auth_mode, "psk") || !strcmp(auth_mode, "psk2") || !strcmp(auth_mode, "pskpsk2") || !strcmp(auth_mode, "psk2psk3")) {
 			if (!strcmp(auth_mode, "pskpsk2"))
 				doSystem("iwpriv %s set AuthMode=%s", wif, "WPAPSKWPA2PSK");
 			else if (!strcmp(auth_mode, "psk"))
 				doSystem("iwpriv %s set AuthMode=%s", wif, "WPAPSK");
 			else if (!strcmp(auth_mode, "psk2"))
 				doSystem("iwpriv %s set AuthMode=%s", wif, "WPA2PSK");
+			else if (!strcmp(auth_mode, "psk2psk3"))
+				doSystem("iwpriv %s set AuthMode=%s", wif, "WPA2PSKWPA3PSK");
 
 			//EncrypType
 			if (nvram_match(strcat_r(prefix, "crypto", tmp), "tkip"))
