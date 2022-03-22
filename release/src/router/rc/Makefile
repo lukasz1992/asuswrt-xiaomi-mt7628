@@ -487,7 +487,6 @@ else
 	@cd $(INSTALLDIR)/sbin && ln -sf rc mtd-erase
 endif
 	@cd $(INSTALLDIR)/sbin && ln -sf rc mtd-unlock
-	@cd $(INSTALLDIR)/sbin && ln -sf rc ots
 	@cd $(INSTALLDIR)/sbin && ln -sf rc watchdog
 ifneq ($(RTCONFIG_QCA)$(RTCONFIG_RALINK),y)
 	@cd $(INSTALLDIR)/sbin && ln -sf rc watchdog02

@@ -461,7 +461,6 @@ static const applets_t applets[] = {
 #endif
 	{ "ddns_updated", 		ddns_updated_main		},
 	{ "radio",			radio_main			},
-	{ "ots",			ots_main			},
 	{ "udhcpc",			udhcpc_wan			},
 	{ "udhcpc_lan",			udhcpc_lan			},
 	{ "zcip",			zcip_wan			},

@@ -6132,7 +6132,6 @@ stop_services_mfg(void)
 
 	stop_wanduck();
 	stop_logger();
-	stop_ots();
 #ifdef RTCONFIG_BWDPI
 	stop_bwdpi_check();
 #endif
