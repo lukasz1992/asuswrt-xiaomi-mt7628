@@ -5531,7 +5531,6 @@ start_services(void)
 #endif
 	start_wps();
 #ifdef RTCONFIG_WPS
-	start_wpsaide();
 #endif
 #ifdef RTCONFIG_BCMWL6
 #ifdef RTCONFIG_HSPOT
@@ -5962,7 +5961,6 @@ stop_services(void)
 #endif
 #endif
 #ifdef RTCONFIG_WPS
-	stop_wpsaide();
 #endif
 	stop_wps();
 #ifdef CONFIG_BCMWL5
@@ -6126,7 +6124,6 @@ stop_services_mfg(void)
 #endif
 #endif
 #ifdef RTCONFIG_WPS
-	stop_wpsaide();
 #endif
 	stop_wps();
 
@@ -6949,7 +6946,6 @@ again:
 				stop_lan_wl();
 				stop_dnsmasq();
 				stop_networkmap();
-				stop_wpsaide();
 #if defined(RTCONFIG_QCA) || defined(RTCONFIG_RALINK)	
 #ifdef RTCONFIG_CONCURRENTREPEATER
 				stop_wlcconnect();
