@@ -290,6 +290,7 @@ ifeq ($(RTCONFIG_MII_MGR),y)
 obj-y += mii_mgr
 endif
 
+ifeq (0,1)
 ifneq ($(findstring linux-3.x,$(LINUXDIR)),)
 # RT-N65U only
 obj-y += rt2880_app
@@ -309,6 +310,7 @@ endif	#ifneq ($(findstring linux-3.x,$(LINUXDIR)),)
 obj-y += $(if $(RTN65U),rt2880_app,ated flash)
 ifeq ($(RTN65U),)
 obj-y += $(if $(or $(RTN14U),$(RTAC52U),$(RTAC51U),$(RTN11P),$(RTN300),$(RTN54U)$(RTAC1200HP),$(RTN56UB1),$(RTN56UB2),$(RTAC54U)),reg,hw_nat)
+endif
 endif
 
 else ifeq ($(RTCONFIG_QCA),y)
