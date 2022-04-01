@@ -196,6 +196,7 @@ static VOID APPeerDeauthReqAction(
 	UCHAR Addr2[MAC_ADDR_LEN];
 	UINT16 Reason, SeqNum;
 	MAC_TABLE_ENTRY *pEntry;
+	STA_TR_ENTRY *tr_entry;
 
 
 
@@ -256,6 +257,17 @@ static VOID APPeerDeauthReqAction(
                                 if (pEntry && !(IS_ENTRY_APCLI(pEntry)))
 #endif /* APCLI_SUPPORT */
                                 {
+		/*when received peer deauth req. AP need firstly stop sw enq & deq*/
+		if ((Elem->Wcid < MAX_LEN_OF_TR_TABLE) && (Elem->Wcid != MCAST_WCID)) {
+			tr_entry = &pAd->MacTab.tr_entry[Elem->Wcid];
+			if (tr_entry != NULL) {
+				tr_entry->enq_cap = FALSE;
+				tr_entry->deq_cap = FALSE;
+				MTWF_LOG(DBG_CAT_ALL, DBG_SUBCAT_ALL, DBG_LVL_WARN,
+					("%s:(wcid=%d),Stop SW enq and deq to solve KR00K\n",
+				__FUNCTION__, Elem->Wcid));
+			}
+		}
 		MacTableDeleteEntry(pAd, Elem->Wcid, Addr2);
                                 }
 #ifdef APCLI_SUPPORT
