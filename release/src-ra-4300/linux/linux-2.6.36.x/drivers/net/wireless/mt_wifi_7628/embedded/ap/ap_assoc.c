@@ -1298,6 +1298,11 @@ VOID ap_cmm_peer_assoc_req_action(
 
 	if (tr_entry == NULL)
 		MTWF_LOG(DBG_CAT_ALL, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("tr_entry is NULL.\n"));
+
+	if (pAd->FragFrame.wcid == pEntry->wcid) {
+		MTWF_LOG(DBG_CAT_MLME, DBG_SUBCAT_ALL, DBG_LVL_WARN, ("\n%s: Clear Wcid = %d FragBuffer !!!!!\n", __func__, pEntry->wcid));
+		RESET_FRAGFRAME(pAd->FragFrame);
+	}
 	/* WPS_BandSteering Support */
 #if defined(BAND_STEERING) && defined(WSC_INCLUDED)
 	if (pAd->ApCfg.BandSteering) {

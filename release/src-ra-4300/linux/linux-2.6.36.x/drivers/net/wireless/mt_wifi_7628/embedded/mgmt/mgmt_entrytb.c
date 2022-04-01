@@ -1293,6 +1293,12 @@ BOOLEAN MacTableDeleteEntry(RTMP_ADAPTER *pAd, USHORT wcid, UCHAR *pAddr)
 	if (RTMP_TEST_FLAG(pAd, fRTMP_ADAPTER_INTERRUPT_ACTIVE))
 #endif /* RTMP_MAC_PCI */
 		rtmp_tx_burst_set(pAd);
+
+	if (pAd->FragFrame.wcid == wcid) {
+		MTWF_LOG(DBG_CAT_MLME, DBG_SUBCAT_ALL, DBG_LVL_WARN, ("\n%s: Clear Wcid = %d FragBuffer !!!!!\n", __func__, wcid));
+		RESET_FRAGFRAME(pAd->FragFrame);
+	}
+
 	/*Reset operating mode when no Sta.*/
 	if (pAd->MacTab.Size == 0)
 	{

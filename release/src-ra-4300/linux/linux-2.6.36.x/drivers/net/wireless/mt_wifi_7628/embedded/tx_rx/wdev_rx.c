@@ -306,6 +306,8 @@ UINT deaggregate_AMSDU_announce(
 VOID Indicate_AMSDU_Packet(RTMP_ADAPTER *pAd, RX_BLK *pRxBlk, UCHAR wdev_idx)
 {
 	//UINT nMSDU;
+	HEADER_802_11 *pHeader = pRxBlk->pHeader;
+	UCHAR *pDA, *pSA;
 
 	if (check_rx_pkt_pn_allowed(pAd, pRxBlk) == FALSE) {
 		MTWF_LOG(DBG_CAT_RX, DBG_SUBCAT_ALL, DBG_LVL_WARN, ("%s:drop packet by PN mismatch!\n", __func__));
@@ -328,6 +330,41 @@ VOID Indicate_AMSDU_Packet(RTMP_ADAPTER *pAd, RX_BLK *pRxBlk, UCHAR wdev_idx)
 		}
 	}
 #endif
+	/*rx check amsdu invalid frame*/
+
+	if (pAd->AmsduAttack_Sequence == pHeader->Sequence) {
+		MTWF_LOG(DBG_CAT_RX, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s: AMSDU ATTACK drop all pkt (the same SN pkt),wcid=%d SN=%d\n",
+					__func__, pRxBlk->wcid, pHeader->Sequence));
+		RELEASE_NDIS_PACKET(pAd, pRxBlk->pRxPacket, NDIS_STATUS_FAILURE);
+		return;
+	} else {
+		pAd->AmsduAttack_Sequence = 0xffff;
+	}
+
+	{
+		if((pHeader->FC.ToDs == 0) && (pHeader->FC.FrDs== 1)) { /*STA RX, check amsdu DA == 802.11 header RA?*/
+			pDA = pRxBlk->pData;
+			pSA = pRxBlk->pData + MAC_ADDR_LEN;
+			if (NdisCmpMemory(pDA, pHeader->Addr1, MAC_ADDR_LEN)) {
+				pAd->AmsduAttack_Sequence = pHeader->Sequence;
+				MTWF_LOG(DBG_CAT_RX, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s: STA RX AMSDU ATTACK,	wcid=%d SN=%d\n",
+					__func__, pRxBlk->wcid, pHeader->Sequence));
+				RELEASE_NDIS_PACKET(pAd, pRxBlk->pRxPacket, NDIS_STATUS_FAILURE);
+				return;
+			}
+		}
+		if((pHeader->FC.ToDs == 1) && (pHeader->FC.FrDs== 0)) {/*AP RX, check amsdu SA == 802.11 header TA?*/
+			pDA = pRxBlk->pData;
+			pSA = pRxBlk->pData + MAC_ADDR_LEN;
+			if (NdisCmpMemory(pSA, pHeader->Addr2, MAC_ADDR_LEN)) {
+				pAd->AmsduAttack_Sequence = pHeader->Sequence;
+				MTWF_LOG(DBG_CAT_RX, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s: AP RX AMSDU ATTACK,	wcid=%d SN=%d\n",
+					__func__, pRxBlk->wcid, pHeader->Sequence));
+				RELEASE_NDIS_PACKET(pAd, pRxBlk->pRxPacket, NDIS_STATUS_FAILURE);
+				return;
+			}
+		}
+	}
 	/*nMSDU = */deaggregate_AMSDU_announce(pAd, pRxBlk->pRxPacket, pRxBlk->pData, pRxBlk->DataSize, pRxBlk->OpMode);
 }
 #endif /* DOT11_N_SUPPORT */
@@ -683,16 +720,6 @@ VOID Indicate_ARalink_Packet(
 		Announce_or_Forward_802_3_Packet(pAd, pPacket2, wdev_idx, opmode);
 }
 
-
-#define RESET_FRAGFRAME(_fragFrame) \
-	{								\
-		_fragFrame.RxSize = 0;		\
-		_fragFrame.Sequence = 0;	\
-		_fragFrame.LastFrag = 0;	\
-		_fragFrame.Flags = 0;		\
-	}
-
-
 PNDIS_PACKET RTMPDeFragmentDataFrame(RTMP_ADAPTER *pAd, RX_BLK *pRxBlk)
 {
 	HEADER_802_11 *pHeader = pRxBlk->pHeader;
@@ -705,6 +732,7 @@ PNDIS_PACKET RTMPDeFragmentDataFrame(RTMP_ADAPTER *pAd, RX_BLK *pRxBlk)
 	UCHAR HeaderRoom = 0;
 	RXWI_STRUC *pRxWI = pRxBlk->pRxWI;
 	UINT8 RXWISize = pAd->chipCap.RXWISize;
+	MAC_TABLE_ENTRY *pEntry = NULL;
 
 	// TODO: shiang-MT7603, fix me for this function work in MT series chips
 #ifdef MT_MAC
@@ -715,6 +743,16 @@ PNDIS_PACKET RTMPDeFragmentDataFrame(RTMP_ADAPTER *pAd, RX_BLK *pRxBlk)
 	ASSERT(pHeader);
 
 	HeaderRoom = pData - (UCHAR *)pHeader;
+
+	if (VALID_WCID(pRxBlk->wcid)) {
+		pEntry = &pAd->MacTab.Content[pRxBlk->wcid];
+		if (!pEntry)
+			MTWF_LOG(DBG_CAT_RX, DBG_SUBCAT_ALL, DBG_LVL_ERROR, ("%s pEntry not find in wcid:0x%x\n", __func__, pRxBlk->wcid));
+		else
+			MTWF_LOG(DBG_CAT_RX, DBG_SUBCAT_ALL, DBG_LVL_INFO,
+				("de_fragment_data_pkt: SN:%d,FN:%d,PN:%llu, sec_mode: %d,  mFrag:%d\n",
+				pHeader->Sequence, pHeader->Frag, pRxBlk->CCMP_PN, pEntry->WepStatus, pHeader->FC.MoreFrag));
+	}
 
 	/* Re-assemble the fragmented packets*/
 	if (pHeader->Frag == 0)
@@ -734,6 +772,21 @@ PNDIS_PACKET RTMPDeFragmentDataFrame(RTMP_ADAPTER *pAd, RX_BLK *pRxBlk)
 			NdisMoveMemory(pFragBuffer + RXWISize, pHeader, pAd->FragFrame.RxSize - RXWISize);
 			pAd->FragFrame.Sequence = pHeader->Sequence;
 			pAd->FragFrame.LastFrag = pHeader->Frag;	   /* Should be 0*/
+			pAd->FragFrame.wcid = pRxBlk->wcid;  /* to tell the fragment Buffer from which STA */
+
+			if(pEntry) {
+				if (pEntry->WepStatus != Ndis802_11EncryptionDisabled) {
+					pAd->FragFrame.sec_on = TRUE;
+				    pAd->FragFrame.sec_mode = pEntry->WepStatus;
+					pAd->FragFrame.LastPN = pRxBlk->CCMP_PN;
+
+					MTWF_LOG(DBG_CAT_RX, DBG_SUBCAT_ALL, DBG_LVL_INFO,
+						("Fragment PACKET INIT, %d,%d,%llu - %d,%d,%llu \n",
+						pHeader->Sequence, pHeader->Frag, pRxBlk->CCMP_PN,
+						pAd->FragFrame.Sequence, pAd->FragFrame.LastFrag, pAd->FragFrame.LastPN));
+				}
+			}
+
 			ASSERT(pAd->FragFrame.LastFrag == 0);
 			goto done;	/* end of processing this frame*/
 		}
@@ -741,12 +794,17 @@ PNDIS_PACKET RTMPDeFragmentDataFrame(RTMP_ADAPTER *pAd, RX_BLK *pRxBlk)
 	else
 	{	/*Middle & End of fragment*/
 		if ((pHeader->Sequence != pAd->FragFrame.Sequence) ||
-			(pHeader->Frag != (pAd->FragFrame.LastFrag + 1)))
+			(pHeader->Frag != (pAd->FragFrame.LastFrag + 1)) ||
+			(pEntry && (pAd->FragFrame.sec_on) && (pAd->FragFrame.sec_mode == pEntry->WepStatus) &&
+			(pRxBlk->CCMP_PN != (pAd->FragFrame.LastPN + 1))))
 		{
 			/* Fragment is not the same sequence or out of fragment number order*/
 			/* Reset Fragment control blk*/
+			MTWF_LOG(DBG_CAT_RX, DBG_SUBCAT_ALL, DBG_LVL_ERROR,
+			("Fragment is not the same SN or out of FN order, %d,%d,%llu - %d,%d,%llu\n",
+			pHeader->Sequence, pHeader->Frag, pRxBlk->CCMP_PN,
+			pAd->FragFrame.Sequence, pAd->FragFrame.LastFrag, pAd->FragFrame.LastPN ));
 			RESET_FRAGFRAME(pAd->FragFrame);
-			MTWF_LOG(DBG_CAT_ALL, DBG_SUBCAT_ALL, DBG_LVL_ERROR, ("Fragment is not the same sequence or out of fragment number order.\n"));
 			goto done;
 		}
 		/* Fix MT5396 crash issue when Rx fragmentation frame for Wi-Fi TGn 5.2.4 & 5.2.13 test items. */
@@ -775,6 +833,7 @@ PNDIS_PACKET RTMPDeFragmentDataFrame(RTMP_ADAPTER *pAd, RX_BLK *pRxBlk)
 		NdisMoveMemory((pFragBuffer + pAd->FragFrame.RxSize), pData, DataSize);
 		pAd->FragFrame.RxSize  += DataSize;
 		pAd->FragFrame.LastFrag = pHeader->Frag;	   /* Update fragment number*/
+		pAd->FragFrame.LastPN = pRxBlk->CCMP_PN;
 
 		/* Last fragment*/
 		if (pHeader->FC.MoreFrag == FALSE)
@@ -1096,8 +1155,32 @@ VOID rx_eapol_frm_handle(
 
 			// TODO: shiang-usw, why we check this here??
 			if ((wdev->wdev_type == WDEV_TYPE_AP) &&
-				(NdisEqualMemory(pRxBlk->pHeader->Addr3, pAd->ApCfg.MBSSID[wdev->func_idx].wdev.bssid, MAC_ADDR_LEN) == FALSE))
+				(NdisEqualMemory(pRxBlk->pHeader->Addr3, pAd->ApCfg.MBSSID[wdev->func_idx].wdev.bssid, MAC_ADDR_LEN) == FALSE)) {
 				to_daemon = TRUE;
+
+				/* Check Source STA is in PortSecured then do FWD packet */
+				{
+						MAC_TABLE_ENTRY *pSrcEntry = NULL;
+						pSrcEntry = MacTableLookup(pAd, pRxBlk->pHeader->Addr2); /*pHeader802_3 + MAC_ADDR_LEN == SAAddr2*/
+						if (pSrcEntry) {
+							STA_TR_ENTRY *tr_entry = &pAd->MacTab.tr_entry[pSrcEntry->wcid];
+
+							if (tr_entry && (tr_entry->PortSecured != WPA_802_1X_PORT_SECURED)) {
+
+								MAC_TABLE_ENTRY *pDaEntry = MacTableLookup(pAd, pRxBlk->pHeader->Addr3); /*find DA Entry*/
+								if (pDaEntry) {
+								MTWF_LOG(DBG_CAT_AP, DBG_SUBCAT_ALL, DBG_LVL_WARN,
+									("%s(): Not PortSecured Pkt FWD to STAs from wcid(%d) to wcid(%d)!\n",
+									__func__, pSrcEntry->wcid, pDaEntry->wcid));
+
+									goto done;
+								}
+
+							}
+						}
+
+				}
+			}
 			else
 				to_mlme = TRUE;
 		}
@@ -2346,7 +2429,16 @@ VOID rx_data_frm_announce(
 							PRINT_MAC(pEntry->Addr)));
 				MlmeDeAuthAction(pAd, pEntry, REASON_NO_LONGER_VALID, FALSE);
 			}
-
+			MTWF_LOG(DBG_CAT_ALL, DBG_SUBCAT_ALL, DBG_LVL_ERROR, ("drop all non-EAP DATA frame before peer's Port-Access-Control is secured\n"));
+			RELEASE_NDIS_PACKET(pAd, pRxBlk->pRxPacket, NDIS_STATUS_FAILURE);
+			return;
+		}
+		/*Drop the non-EAP data frame with FC.Wep=0 when device is working Encryption Mode. rtmp_chk_rx_err can't handle this issue*/
+		if ((pRxBlk->pHeader->FC.Wep == 0) && (pRxBlk->pHeader->FC.Type == FC_TYPE_DATA)
+			&& (pEntry->WepStatus != Ndis802_11EncryptionDisabled)) {
+			MTWF_LOG(DBG_CAT_ALL, DBG_SUBCAT_ALL, DBG_LVL_ERROR, ("==> Receiving non-EAP data frame with FC.Wep=0, so de-Auth this STA(%02x:%02x:%02x:%02x:%02x:%02x) for \n",
+							PRINT_MAC(pEntry->Addr)));
+			MlmeDeAuthAction(pAd, pEntry, REASON_UNSPECIFY, FALSE);
 			RELEASE_NDIS_PACKET(pAd, pRxBlk->pRxPacket, NDIS_STATUS_FAILURE);
 			return;
 		}

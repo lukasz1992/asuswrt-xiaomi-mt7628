@@ -1155,6 +1155,10 @@ typedef struct _FRAGMENT_FRAME {
 	USHORT Sequence;
 	USHORT LastFrag;
 	ULONG Flags;		/* Some extra frame information. bit 0: LLC presented */
+	UINT16 wcid;
+	BOOLEAN sec_on;
+	UINT8 sec_mode;
+	UINT64 LastPN;
 } FRAGMENT_FRAME, *PFRAGMENT_FRAME;
 
 
@@ -6010,6 +6014,7 @@ struct _RTMP_ADAPTER {
 	UCHAR bMAPQuickChChangeEn;
 #endif /* MAP_SUPPORT */
 	UCHAR reg_domain;
+	USHORT AmsduAttack_Sequence; /*save sequence for amsdu attack*/
 };
 
 #if defined(RTMP_INTERNAL_TX_ALC) || defined(RTMP_TEMPERATURE_COMPENSATION)
@@ -11186,6 +11191,22 @@ REPEATER_CLIENT_ENTRY *lookup_rept_entry(RTMP_ADAPTER *pAd, PUCHAR address);
 PUCHAR get_channelset_by_reg_class(IN RTMP_ADAPTER *pAd, IN UINT8 RegulatoryClass);
 
 BOOLEAN IsPublicActionFrame(IN PRTMP_ADAPTER	pAd, IN VOID *pbuf);
+
+#define RESET_FRAGFRAME(_fragFrame) \
+	{								\
+		_fragFrame.RxSize = 0;		\
+		_fragFrame.Sequence = 0;	\
+		_fragFrame.LastFrag = 0;	\
+		_fragFrame.Flags = 0;		\
+		_fragFrame.wcid = 0;		\
+		_fragFrame.sec_mode = 0;	\
+		_fragFrame.LastPN = 0;		\
+		_fragFrame.sec_on = FALSE;  \
+	}
+
+INT	Set_PtkRekey_Proc(
+	IN  PRTMP_ADAPTER pAd,
+    IN  RTMP_STRING *arg);
 
 #endif  /* __RTMP_H__ */
 

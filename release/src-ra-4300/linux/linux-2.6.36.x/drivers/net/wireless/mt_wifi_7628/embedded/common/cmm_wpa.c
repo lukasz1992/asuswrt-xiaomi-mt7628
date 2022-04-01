@@ -1755,6 +1755,10 @@ VOID PeerPairMsg2Action(
 			hex_dump("GTK", gtk_ptr, 32);
 		}
 #endif
+		if (pAd->FragFrame.wcid == pEntry->wcid) {
+			MTWF_LOG(DBG_CAT_MLME, DBG_SUBCAT_ALL, DBG_LVL_WARN, ("\n%s: Clear Wcid = %d FragBuffer !!!!!\n", __func__, pEntry->wcid));
+			RESET_FRAGFRAME(pAd->FragFrame);
+		}
 
 #ifdef MT_MAC
         if (pAd->chipCap.hif_type == HIF_MT)
@@ -2047,6 +2051,11 @@ VOID PeerPairMsg3Action(
 
 	if ((pEntry->AllowInsPTK == TRUE) && bWPA2) {
 		UCHAR kid = pEntry->LastGroupKeyId;
+
+		if (pAd->FragFrame.wcid == pEntry->wcid) {
+			MTWF_LOG(DBG_CAT_MLME, DBG_SUBCAT_ALL, DBG_LVL_WARN, ("\n%s: Clear Wcid = %d FragBuffer !!!!!\n", __func__, pEntry->wcid));
+			RESET_FRAGFRAME(pAd->FragFrame);
+		}
 
 		if (unlikely(kid >= ARRAY_SIZE(pEntry->CCMP_BC_PN))) {
 			MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("%s invalid key id %u\n", __func__, kid));

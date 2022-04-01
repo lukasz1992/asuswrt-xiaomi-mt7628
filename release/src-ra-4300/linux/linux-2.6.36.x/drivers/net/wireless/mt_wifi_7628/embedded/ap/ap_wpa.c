@@ -2067,3 +2067,54 @@ VOID ApCliWpaDisassocApAndBlockAssoc(
 }
 
 #endif/*APCLI_SUPPORT*/
+
+INT	Set_PtkRekey_Proc(
+	IN  PRTMP_ADAPTER pAd,
+	IN  RTMP_STRING *arg)
+{
+	UCHAR wcid = 0;
+	MAC_TABLE_ENTRY *pEntry = NULL;
+	STA_TR_ENTRY *tr_entry = NULL;
+
+	wcid = (UCHAR)simple_strtol(arg, 0, 10);
+	if (!VALID_UCAST_ENTRY_WCID(wcid))
+		return FALSE;
+
+	pEntry = &pAd->MacTab.Content[wcid];
+
+	if (!pEntry || !IS_ENTRY_CLIENT(pEntry)) {
+		MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s: pEntry is null\n",
+			 __func__));
+		return FALSE;
+	}
+
+	tr_entry = &pAd->MacTab.tr_entry[pEntry->wcid];
+	if (!tr_entry) {
+		MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s: tr_entry is null\n",
+			 __func__));
+		return FALSE;
+	}
+
+	if (((pEntry->AuthMode == Ndis802_11AuthModeWPAPSK) || (pEntry->AuthMode == Ndis802_11AuthModeWPA2PSK)
+#ifdef DOT11_SAE_SUPPORT
+	|| (pEntry->AuthMode == Ndis802_11AuthModeWPA3PSK)
+#endif
+#ifdef CONFIG_OWE_SUPPORT
+	|| (pEntry->AuthMode == Ndis802_11AuthModeOWE)
+#endif
+	|| ((pEntry->AuthMode == Ndis802_11AuthModeWPA2) && (pEntry->PMKID_CacheIdx != ENTRY_NOT_FOUND))))
+	{
+		pEntry->PrivacyFilter = Ndis802_11PrivFilter8021xWEP;
+		pEntry->WpaState = AS_INITPSK;
+		tr_entry->PortSecured = WPA_802_1X_PORT_NOT_SECURED;
+		/*NdisZeroMemory(pEntry->R_Counter, sizeof(pEntry->R_Counter));*/
+		pEntry->ReTryCounter = PEER_MSG1_RETRY_TIMER_CTR;
+
+		WPAStart4WayHS(pAd, pEntry, PEER_MSG1_RETRY_EXEC_INTV);
+	}
+
+	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_OFF, ("%s::(WCID=%d)\n",
+			 __func__, wcid));
+
+	return TRUE;
+}

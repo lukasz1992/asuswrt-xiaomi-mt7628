@@ -737,6 +737,7 @@ static struct {
 	{"PwrOffset",					Set_Power_Offset_Proc},
 	{"AssocReqRssiThres",           Set_AP_ASSOC_REQ_RSSI_THRESHOLD},
 	{"KickStaRssiLow",				Set_AP_KickStaRssiLow_Proc},
+	{"PtkRekey",					Set_PtkRekey_Proc},
 #ifdef AP_SCAN_SUPPORT
 	{"SiteSurvey",					Set_SiteSurvey_Proc},
 	{"AutoChannelSel",				Set_AutoChannelSel_Proc},

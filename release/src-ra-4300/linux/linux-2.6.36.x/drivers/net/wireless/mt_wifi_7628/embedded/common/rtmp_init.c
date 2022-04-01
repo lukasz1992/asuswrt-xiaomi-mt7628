@@ -2145,6 +2145,7 @@ VOID UserCfgInit(RTMP_ADAPTER *pAd)
 	pAd->bss_load_info.high_thrd = MAX_BSSLOAD_THRD;
 	pAd->bss_load_info.low_thrd = 0;
 #endif /* WAPP_SUPPORT */
+	pAd->AmsduAttack_Sequence = 0xffff;
 	MTWF_LOG(DBG_CAT_ALL, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("<-- UserCfgInit\n"));
 }
 
