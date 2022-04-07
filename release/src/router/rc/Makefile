@@ -48,7 +48,7 @@ endif
 
 include $(SRCBASE)/.config
 
-ifeq ($(RTCONFIG_REALTEK),y)
+ifeq (y,y)
 LDFLAGS = -L$(TOP)/nvram${BCMEX} -lnvram -L$(TOP)/shared -lshared -lcrypt -ldl
 else
 LDFLAGS = -L$(TOP)/nvram${BCMEX} -lnvram -L$(TOP)/shared -lshared -lcrypt -L$(TOP)/libbcmcrypto -lbcmcrypto -ldl

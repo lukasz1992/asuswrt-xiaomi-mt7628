@@ -24,9 +24,10 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <strings.h>
-#include "realtek.h"
-#include "realtek_common.h"
+#include "sysdeps/ralink/image.h"
 #include <wlscan.h>
+
+#define rtklog cprintf
 
 #ifndef O_BINARY
 #define O_BINARY        0

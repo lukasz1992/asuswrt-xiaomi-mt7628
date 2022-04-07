@@ -515,7 +515,7 @@ obj-$(RTCONFIG_BCMASPMD) += aspmd
 
 obj-$(RTCONFIG_WLCLMLOAD) += clm
 ifneq ($(RTCONFIG_REALTEK),y)
-obj-y += libbcmcrypto
+#obj-y += libbcmcrypto
 endif
 #obj-y += cyassl
 obj-$(RTCONFIG_HTTPS) += mssl
