@@ -450,8 +450,6 @@ typedef enum _RT_802_11_PHY_MODE {
 #define GPIO7		0x0080
 #define GPIO15		0x8000
 
-unsigned long task_mask;
-
 int switch_init(void);
 
 void switch_fini(void);

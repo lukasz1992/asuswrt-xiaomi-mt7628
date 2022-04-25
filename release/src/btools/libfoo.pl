@@ -589,12 +589,16 @@ genSO("${root}/usr/lib/libbigballofmud.so", "${router}/samba3/source/bin/libbigb
 genSO("${root}/usr/lib/liblzo2.so.2", "${router}/lzo/src/.libs/liblzo2.a");
 #	genSO("${root}/usr/lib/libtamba.so", "${router}/samba3/source/bin/libtamba.a");
 #	genSO("${root}/usr/lib/libiptc.so", "${router}/iptables/libiptc/libiptc.a");
-#	genSO("${root}/usr/lib/libshared.so", "${router}/shared/libshared.a");
-#	genSO("${root}/usr/lib/libnvram.so", "${router}/nvram/libnvram.a");
+genSO("${root}/usr/lib/libshared.so", "${router}/shared/libshared.a");
+genSO("${root}/usr/lib/libnvram.so", "${router}/nvram/libnvram.a");
 #	genSO("${root}/usr/lib/libusb-1.0.so.0", "${router}/libusb10/libusb/.libs/libusb-1.0.a");
 #	genSO("${root}/usr/lib/libusb-0.1.so.4", "${router}/libusb/libusb/.libs/libusb.a", "", "-L${router}/libusb10/libusb/.libs");
 genSO("${root}/usr/lib/libbcmcrypto.so", "${router}/libbcmcrypto/libbcmcrypto.a");
 
+genSO("${root}/usr/lib/libexpat.so.1.5.2", "${router}/expat-2.0.1/.libs/libexpat.a");
+genSO("${root}/usr/lib/libdaemon.so.0.5.0", "${router}/libdaemon/libdaemon/.libs/libdaemon.a");
+genSO("${root}/usr/lib/libavahi-common.so.3.5.3", "${router}/avahi-0.6.31/avahi-common/.libs/libavahi-common.a");
+genSO("${root}/usr/lib/libavahi-core.so.7.0.2", "${router}/avahi-0.6.31/avahi-core/.libs/libavahi-core.a", "", "-L${router}/avahi-0.6.31/avahi-common/.libs/");
 
 print "\n";
 
