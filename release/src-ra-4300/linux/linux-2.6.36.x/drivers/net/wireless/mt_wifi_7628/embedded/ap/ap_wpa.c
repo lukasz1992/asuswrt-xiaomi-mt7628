@@ -1767,7 +1767,7 @@ VOID RTMPHandleSTAKey(
         if(pOutBuffer == NULL)
             break;
 
-        MAKE_802_3_HEADER(Header802_3, pDaEntry->Addr, pAd->ApCfg.MBSSID[pDaEntry->apidx].wdev.bssid, EAPOL);
+        MAKE_802_3_HEADER(Header802_3, pDaEntry->Addr, pAd->ApCfg.MBSSID[pDaEntry->func_tb_idx].wdev.bssid, EAPOL);
 
         /* Increment replay counter by 1 */
         ADD_ONE_To_64BIT_VAR(pDaEntry->R_Counter);

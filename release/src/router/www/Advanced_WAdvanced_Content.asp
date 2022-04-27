@@ -400,10 +400,6 @@ function initial(){
 		add_option(document.form.wl_mrate_x, mcast_rates[i][0], mcast_rates[i][1], (mcast_rate == mcast_rates[i][1]) ? 1 : 0);
 	}
 
-	if(1){		//with RE mode
-		document.getElementById("DLSCapable").style.display = "none";	
-	}	
-
 	if(document.form.wl_nmode_x.value == "0" || document.form.wl_nmode_x.value == "1"){		//auto , n only		
 		inputCtrl(document.form.wl_frag, 0);
 		document.form.wl_wme.value = "on";

@@ -120,13 +120,13 @@ VOID APPeerDlsReqAction(
 	pDAEntry = MacTableLookup(pAd, DA);
 	if (!pDAEntry)
 		Status = MLME_DEST_STA_NOT_IN_QBSS;
-	else if (pDAEntry && (pDAEntry->apidx != pSAEntry->apidx))
+	else if (pDAEntry && (pDAEntry->func_tb_idx != pSAEntry->func_tb_idx))
 		Status = MLME_DEST_STA_NOT_IN_QBSS;
 	else if (pDAEntry && !CLIENT_STATUS_TEST_FLAG(pDAEntry, fCLIENT_STATUS_WMM_CAPABLE))
 		Status = MLME_DEST_STA_IS_NOT_A_QSTA;
 	else if (pDAEntry->WepStatus != pSAEntry->WepStatus)
 		Status = MLME_QOS_UNSPECIFY; /* different security algorithm */
-	else if (!pAd->ApCfg.MBSSID[pSAEntry->apidx].bDLSCapable)
+	else if (!pAd->ApCfg.MBSSID[pSAEntry->func_tb_idx].bDLSCapable)
 		Status = MLME_DLS_NOT_ALLOW_IN_QBSS;
 	else
 		Status = MLME_SUCCESS;
@@ -142,7 +142,7 @@ VOID APPeerDlsReqAction(
 		return;
 
 #ifdef CONFIG_HOTSPOT
-	if (pAd->ApCfg.MBSSID[pSAEntry->apidx].HotSpotCtrl.L2Filter)
+	if (pAd->ApCfg.MBSSID[pSAEntry->func_tb_idx].HotSpotCtrl.L2Filter)
 		Status = MLME_DLS_NOT_ALLOW_IN_QBSS;
 #endif
 
@@ -153,7 +153,7 @@ VOID APPeerDlsReqAction(
 	if (Status == MLME_SUCCESS)
 	{
 		NdisMoveMemory(Fr->Hdr.Addr1, DA, MAC_ADDR_LEN);
-		NdisMoveMemory(Fr->Hdr.Addr2, pAd->ApCfg.MBSSID[pSAEntry->apidx].wdev.bssid, MAC_ADDR_LEN);
+		NdisMoveMemory(Fr->Hdr.Addr2, pAd->ApCfg.MBSSID[pSAEntry->func_tb_idx].wdev.bssid, MAC_ADDR_LEN);
 		NdisMoveMemory(Fr->Hdr.Addr3, SA, MAC_ADDR_LEN);
 		NdisMoveMemory(pOutBuffer, pElem->Msg, pElem->MsgLen);
 		FrameLen = pElem->MsgLen;
@@ -162,8 +162,8 @@ VOID APPeerDlsReqAction(
 	{
 		/* response error to source station */
 		MgtMacHeaderInit(pAd, &DlsRspHdr, SUBTYPE_ACTION, 0, SA,
-						pAd->ApCfg.MBSSID[pSAEntry->apidx].wdev.if_addr,
-						pAd->ApCfg.MBSSID[pSAEntry->apidx].wdev.bssid);
+						pAd->ApCfg.MBSSID[pSAEntry->func_tb_idx].wdev.if_addr,
+						pAd->ApCfg.MBSSID[pSAEntry->func_tb_idx].wdev.bssid);
 
 		/*
 			Capability information and supported rate field are present
@@ -258,7 +258,7 @@ VOID APPeerDlsRspAction(
 		return; /* fatal error, no available memory */
 
 	NdisMoveMemory(Fr->Hdr.Addr1, DA, MAC_ADDR_LEN);
-	NdisMoveMemory(Fr->Hdr.Addr2, pAd->ApCfg.MBSSID[pSAEntry->apidx].wdev.bssid, MAC_ADDR_LEN);
+	NdisMoveMemory(Fr->Hdr.Addr2, pAd->ApCfg.MBSSID[pSAEntry->func_tb_idx].wdev.bssid, MAC_ADDR_LEN);
 	NdisMoveMemory(Fr->Hdr.Addr3, SA, MAC_ADDR_LEN);
 
 	NdisMoveMemory(pOutBuffer, pElem->Msg, pElem->MsgLen);
@@ -330,7 +330,7 @@ VOID APPeerDlsTearDownAction(
 		return; /* fatal error, no available memory */
 
 	NdisMoveMemory(Fr->Hdr.Addr1, DA, MAC_ADDR_LEN);
-	NdisMoveMemory(Fr->Hdr.Addr2, pAd->ApCfg.MBSSID[pSAEntry->apidx].wdev.bssid, MAC_ADDR_LEN);
+	NdisMoveMemory(Fr->Hdr.Addr2, pAd->ApCfg.MBSSID[pSAEntry->func_tb_idx].wdev.bssid, MAC_ADDR_LEN);
 	NdisMoveMemory(Fr->Hdr.Addr3, SA, MAC_ADDR_LEN);
 
 	NdisMoveMemory(pOutBuffer, pElem->Msg, pElem->MsgLen);
