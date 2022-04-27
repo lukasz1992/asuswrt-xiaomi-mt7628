@@ -181,7 +181,7 @@ var isSwMode = function(mode){
 var productid = '<#Web_Title2#>';
 var based_modelid = '<% nvram_get("productid"); %>';
 var odmpid = '<% nvram_get("odmpid"); %>';
-var support_site_modelid = (odmpid == "")? based_modelid : odmpid;
+var support_site_modelid = "RT-N300-B1";
 var hw_ver = '<% nvram_get("hardware_version"); %>';
 var bl_version = '<% nvram_get("bl_version"); %>';
 var uptimeStr = "<% uptime(); %>";
