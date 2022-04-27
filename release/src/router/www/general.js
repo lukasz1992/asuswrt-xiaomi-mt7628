@@ -1296,7 +1296,7 @@ function wl_auth_mode_change(isload){
 		inputCtrl(document.form.wl_wpa_psk,  0);
 
 	/* update wl_crypto */
-	if(mode == "psk" || mode == "psk2" || mode == "pskpsk2" || mode == "psk3" || mode == "psk2psk3" || mode == "wpa" || mode == "wpa2" ||mode == "wpawpa2"){
+	if(mode == "psk" || mode == "psk2" || mode == "pskpsk2" || mode == "psk3" || mode == "psk2psk3" || mode == "owe" || mode == "wpa" || mode == "wpa2" || mode == "wpawpa2"){
 		/* Save current crypto algorithm */
 		for(var i = 0; i < document.form.wl_crypto.length; i++){
 			if(document.form.wl_crypto[i].selected){
@@ -1329,6 +1329,10 @@ function wl_auth_mode_change(isload){
 	if(wl_mfp_support && (document.form.wl_mfp != null)){
 		if ((mode.search("psk2") >= 0 || mode.search("wpa2") >= 0) || mode.search("psk3") >= 0 || mode.search("owe") >= 0){
 			inputCtrl(document.form.wl_mfp,  1);	
+			if (mode.search("psk3") >= 0 && document.form.wl_mfp.value == "0")
+				document.form.wl_mfp.value = 1;
+			if (mode == "psk3" || mode == "owe")
+				document.form.wl_mfp.value = 2;
 		}
 		else{
 			inputCtrl(document.form.wl_mfp,  0);	
