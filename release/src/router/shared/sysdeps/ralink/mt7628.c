@@ -985,47 +985,22 @@ static void get_mt7628_esw_WAN_Speed(unsigned int *speed)
 
 static void link_down_up_mt7628_PHY(unsigned int mask, int status, int inverse)
 {
-//#if defined(RTCONFIG_RALINK_MT7628)
-#if 0	
-	printf("%s: mask: %d\tstatus: %d\tinverse: %d\n", __func__, mask, status, inverse);
-	int i;
-	unsigned int v, m;
+	struct ifreq ifr;
+	ra_mii_ioctl_data mii;
 
 	if (switch_init() < 0)
 		return;
 
-	mt7628_reg_read(REG_ESW_POC0, &v);
-	printf("READ REG_ESW_POC0: %u\n", v);
-	
-	for (i = 0, m = mask; m && i < NR_WANLAN_PORT; ++i, m >>= 1) {
-		if (!(m & 1))
-			continue;
-		if (status) // power up PHY
-			v &= (0 << (i + 23));
-		else // power down PHY
-			v |= (1 << (i + 23));
-	}
-	printf("WRITE REG_ESW_POC0: %u\n", v);
-	mt7628_reg_write(REG_ESW_POC0, v);
+	strncpy(ifr.ifr_name, "eth2", 5);
+	ifr.ifr_data = &mii;
+	mii.reg_num = mii.val_out = 0;
+	mii.val_in = status ? 0x3300 : 0x3900;
+
+	for (mii.phy_id = 0; mask && mii.phy_id < NR_WANLAN_PORT; ++mii.phy_id, mask >>= 1)
+		if (mask & 1)
+			ioctl(esw_fd, RAETH_MII_WRITE, &ifr);
 
 	switch_fini();
-		
-#else
-	int i;
-	char idx[2];
-	char value[5] = "3300";	//power up PHY
-	unsigned int m;
-
-	if (!status)		//power down PHY
-		value[1] = '9';
-
-	for (i = 0, m = mask; m && i < NR_WANLAN_PORT; ++i, m >>= 1) {
-		if (!(m & 1))
-			continue;
-		sprintf(idx, "%d", i);
-		eval("mii_mgr", "-s", "-p", idx, "-r", "0", "-v", value);
-	}
-#endif
 }
 
 void set_mt7628_esw_broadcast_rate(int bsr)
