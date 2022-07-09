@@ -3045,6 +3045,7 @@ void btn_check(void)
 							}
 						}
 #endif
+						kill_pidfile_s("/var/run/wpsaide.pid", SIGTSTP);
 #endif
 						wsc_timeout = WPS_TIMEOUT_COUNT;
 #if defined(RTCONFIG_CONCURRENTREPEATER) && defined(RTCONFIG_MTK_REP)
@@ -3109,6 +3110,7 @@ void btn_check(void)
 						}
 					}
 #endif
+					kill_pidfile_s("/var/run/wpsaide.pid", SIGTSTP);
 #endif
 					wsc_timeout = WPS_TIMEOUT_COUNT;
 				}
