@@ -62,6 +62,8 @@ install:
 ifeq ($(RTAC88U),y)
 	install -m 0644 smb.conf $(INSTALLDIR)/rom/smb.conf
 endif
+
+ifneq ($(RT4C),y)
 ifeq ($(RTCONFIG_APP_PREINSTALLED),y)
 ifeq ($(RTCONFIG_NEW_APP_ARM),y)
 	install -m 0644 optware.asus.$(pkg_type)_new $(INSTALLDIR)/rom/optware.asus
@@ -157,6 +159,7 @@ ifeq ($(RTCONFIG_BWDPI),y)
 endif
 ifeq ($(RTCONFIG_HTTPS),y)
 	cp -f webs_scripts/public.pem $(INSTALLDIR)/usr/sbin/public.pem
+endif
 endif
 endif
 
