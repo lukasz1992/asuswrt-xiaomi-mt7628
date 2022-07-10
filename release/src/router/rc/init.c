@@ -3033,8 +3033,9 @@ int init_nvram(void)
 		set_basic_ifname_vars("vlan2", "vlan1", "ra0", NULL, NULL, "vlan1", NULL, "vlan3", NULL, 0);
 
 		nvram_set_int("btn_rst_gpio",  38|GPIO_ACTIVE_LOW);
+		nvram_set_int("btn_wps_gpio",  38|GPIO_ACTIVE_LOW);
 		nvram_set_int("led_pwr_gpio",  11|GPIO_ACTIVE_LOW);
-		nvram_set_int("led_wan_gpio",  44|GPIO_ACTIVE_LOW);
+		nvram_set_int("led_wps_gpio",  44|GPIO_ACTIVE_LOW);
 
 		nvram_set("ct_max", "300000"); // force
 
