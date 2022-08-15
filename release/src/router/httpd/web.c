@@ -2526,7 +2526,7 @@ static int validate_apply(webs_t wp, json_object *root) {
 					change_passwd = 1;
 				}
 
-#ifdef RTCONFIG_HTTPS
+#ifdef RTCONFIG_PUSH_EMAIL
 				if(!strcmp(name, "PM_SMTP_AUTH_PASS")){
 					_dprintf("PM_SMTP_AUTH_PASS match\n");
 					char pw_tmp[256];
